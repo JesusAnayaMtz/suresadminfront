@@ -3,7 +3,7 @@ import ClientList from "../components/ClientList";
 
 const ClientsPage = () => {
   return (
-    <div className="container">
+    <div>
       <ClientList />
     </div>
   );

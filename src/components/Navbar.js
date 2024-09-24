@@ -1,23 +1,36 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Nav } from "react-bootstrap";
+import React, { useState } from "react";
+import { Nav, Button, Offcanvas } from "react-bootstrap";
+
 
 const Navbar = () => {
+
+    const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
-    <div
-      className="d-flex flex-column vh-100 bg-light p-3"
-      style={{ width: "250px" }}
-    >
-      <h2 className="text-center">Menu</h2>
-      <Nav className="flex-colum">
-        <Nav.Link as={Link} to="/">
-          Inicio
-        </Nav.Link>
-        <Nav.Link as={Link} to="/clientes">
-          Clientes
-        </Nav.Link>
-      </Nav>
-    </div>
+    <>
+      {/* Botón para abrir el Offcanvas */}
+      <div className="mb-2">
+      <Button variant="primary" onClick={handleShow} className="mb-3 lg">
+        Menú
+      </Button>
+      </div>
+      {/* Menú Offcanvas */}
+      <Offcanvas show={show} onHide={handleClose} placement="start">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>Menú Navegación</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Nav className="flex-column">
+            <Nav.Link href="/">Inicio</Nav.Link>
+            <Nav.Link href="/clientes">Clientes</Nav.Link>
+            {/* Puedes agregar más enlaces o ítems de menú aquí */}
+          </Nav>
+        </Offcanvas.Body>
+      </Offcanvas>
+    </>
   );
 };
 
