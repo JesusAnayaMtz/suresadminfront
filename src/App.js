@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import ClientsPage from "./pages/ClientsPage";
 import Sidebar from "./components/Sidebar";
+import ProveedorPage from "./pages/ProveedorPage";
 
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/clientes" element={<ClientsPage />} />
+            <Route path="/proveedores" element={<ProveedorPage />} />
           </Routes>
         </main>
       </div>
