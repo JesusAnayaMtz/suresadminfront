@@ -4,6 +4,8 @@ import ClientFormModal from "./ClientFormModal";
 import ClientDetailsModal from "./ClientDetailsModal";
 import SearchBar from "./SearchBar";
 import { Button, Table} from "react-bootstrap";
+import * as XLSX from 'xlsx';
+import { BsEye, BsPencil, BsTrash } from "react-icons/bs";
 
 const ClientList = () => {
   const [clients, setClients] = useState([]);
@@ -65,6 +67,14 @@ const ClientList = () => {
       client.rfc.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Función para exportar a Excel
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(clients); // Convertir datos a hoja Excel
+    const workbook = XLSX.utils.book_new(); // Crear un nuevo libro Excel
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Clientes"); // Agregar la hoja
+    XLSX.writeFile(workbook, "clientes.xlsx"); // Descargar el archivo como "clientes.xlsx"
+  };
+
   return (
     <div>
       <h2 className="text-center">Gestión de Clientes</h2>
@@ -73,15 +83,25 @@ const ClientList = () => {
           <div className="col-md-1 mb-3">
             <p className="mt-2 text-center">Buscar</p>
           </div>
-        <div className="col-md-7">
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <div className="col-md-7">
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          </div>
+          <div className="col-md-4 text-end">
+            <Button onClick={handleCreate} className="mb-3">
+              Crear Cliente
+            </Button>
+          </div>
         </div>
-        <div className="col-md-4 text-end">
-        <Button onClick={handleCreate} className="mb-3">
-        Crear Cliente
-      </Button>
+        <div className="col-md-12 text-end">
+          <Button
+            onClick={exportToExcel}
+            variant="success"
+            size="sm"
+            className="mb-3 primary"
+          >
+            Exportar a Excel
+          </Button>
         </div>
-      </div>
       </div>
       <Table striped bordered hover>
         <thead>
@@ -102,19 +122,24 @@ const ClientList = () => {
               <td>{client.telefono}</td>
               <td>
                 <Button
-                  variant="info"
+                  variant="primary"
                   onClick={() => handleViewDetails(client)}
+                  className="me-2"
                 >
-                  Ver Detalles
+                  <BsEye size={24} color="black" />
                 </Button>{" "}
-                <Button variant="warning" onClick={() => handleEdit(client)}>
-                  Editar
+                <Button
+                  variant="warning"
+                  onClick={() => handleEdit(client)}
+                  className="me-2"
+                >
+                  <BsPencil size={24} />
                 </Button>{" "}
                 <Button
                   variant="danger"
                   onClick={() => handleDelete(client.id)}
                 >
-                  Eliminar
+                  <BsTrash size={24} color="black" />
                 </Button>
               </td>
             </tr>

@@ -4,6 +4,7 @@ import { Button, Table} from "react-bootstrap";
 import { activateProveedor, deleteProveedor, getAllProveedores } from "../services/proveedorService";
 import ProveedorFormModal from "./ProveedorFormModal";
 import ProveedorDetailsModal from "./ProveedorDetailsModal";
+import * as XLSX from "xlsx";
 
 
 const ProveedorList = () => {
@@ -66,6 +67,14 @@ const ProveedorList = () => {
       proveedor.rfc.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Función para exportar a Excel
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(proveedores); // Convertir datos a hoja Excel
+    const workbook = XLSX.utils.book_new(); // Crear un nuevo libro Excel
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Proveedores"); // Agregar la hoja
+    XLSX.writeFile(workbook, "proveedores.xlsx"); // Descargar el archivo como "clientes.xlsx"
+  };
+
   return (
     <div>
       <h2 className="text-center">Gestión de Proveedores</h2>
@@ -74,15 +83,25 @@ const ProveedorList = () => {
           <div className="col-md-1 mb-3">
             <p className="mt-2 text-center">Buscar</p>
           </div>
-        <div className="col-md-7">
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <div className="col-md-7">
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          </div>
+          <div className="col-md-4 text-end">
+            <Button onClick={handleCreate} className="mb-3">
+              Crear Proveedor
+            </Button>
+          </div>
         </div>
-        <div className="col-md-4 text-end">
-        <Button onClick={handleCreate} className="mb-3">
-        Crear Proveedor
-      </Button>
+        <div className="col-md-12 text-end">
+          <Button
+            onClick={exportToExcel}
+            variant="success"
+            size="sm"
+            className="mb-3 primary"
+          >
+            Exportar a Excel
+          </Button>
         </div>
-      </div>
       </div>
       <Table striped bordered hover>
         <thead>
