@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Nav } from "react-bootstrap";
 import { BsHouse, BsPeople, BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs"; // Cambia a react-icons/bs para íconos de Bootstrap
+import { SlSocialDropbox } from "react-icons/sl";
 import "./Sidebar.css"; // Archivo CSS para los estilos
 
 const Sidebar = () => {
@@ -33,7 +34,10 @@ const Sidebar = () => {
           <BsPeople className="icon" />
           {!isCollapsed && <span>Proveedores</span>}
         </Nav.Link>
-        
+        <Nav.Link href="/productos" className="sidebar-item">
+          <SlSocialDropbox className="icon" />
+          {!isCollapsed && <span>Productos</span>}
+        </Nav.Link>
       </Nav>
     </div>
   );
