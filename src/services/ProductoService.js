@@ -2,51 +2,63 @@ import axios from "axios";
 
 const API_URL = 'http://localhost:8080/api/productos';
 
-const getAllProductos = () => {
-    return axios.get(API_URL);
+// Obtener todos los productos
+export const getAllProducts = () => axios.get(API_URL);
+
+// Obtener producto por ID
+export const getProductById = (id) => axios.get(`${API_URL}/${id}`);
+
+// Crear producto sin imagen
+export const createProduct = async (productData, imageFile) => {
+  try {
+    // Primero crea el producto sin imagen
+    const response = await axios.post(API_URL, productData);
+    const product = response.data;
+
+    // Luego, si se proporciona una imagen, se sube la imagen
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("imagen", imageFile);
+      
+      await axios.post(`${API_URL}/${product.id}/imagen`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    }
+
+    return product;
+  } catch (error) {
+    console.error('Error creando el producto:', error);
+    throw error;
+  }
 };
 
-const getProductoById = (id) => {
-    return axios.get(`${API_URL}/${id}`);
-  };
+// Actualizar producto con imagen opcional
+export const updateProduct = async (id, productData, imageFile) => {
+  try {
+    // Primero actualiza los datos del producto sin imagen
+    await axios.put(`${API_URL}/${id}`, productData);
 
-  //Crear productos sin imagen
-  const crearProducto = (productoData) => {
-    return axios.post(API_URL, productoData);
-  };
-
-  //Subir imagen a producto existente
-  const uploadProductoImagen = (productoId, imageFIle) => {
-    const formData = new FormData();
-    formData.append('imagen', imageFIle);
-
-    return axios.post(`${API_URL}/${productoId}/imagen`, formData, {
+    // Luego, si se proporciona una nueva imagen, se actualiza la imagen
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("imagen", imageFile);
+      
+      await axios.post(`${API_URL}/${id}/imagen`, formData, {
         headers: {
-            'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
-    });
-  };
+      });
+    }
+  } catch (error) {
+    console.error('Error actualizando el producto:', error);
+    throw error;
+  }
+};
 
-  // Editar el producto sin imagen
-const updateProduct = (id, productData) => {
-    return axios.put(`${API_URL}/${id}`, productData);
-  };
+// Desactivar producto
+export const deleteProduct = (id) => axios.delete(`${API_URL}/desactivar/${id}`);
 
-  const deleteProduct = (id) => {
-    return axios.delete(`${API_URL}/${id}`);
-  };
-
-  const searchProducts = (query) => {
-    return axios.get(`${API_URL}/buscar${query}`);
-  };
-
-  export default {
-    getAllProductos,
-    getProductoById,
-    crearProducto,
-    uploadProductoImagen,
-    updateProduct,
-    deleteProduct,
-    searchProducts,
-  };
-
+// Activar producto
+export const activateProduct = (id) => axios.put(`${API_URL}/activar/${id}`);

@@ -1,182 +1,135 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import ProductoService from '../services/ProductoService';
+import React, { useState, useEffect } from "react";
+import { createProduct, updateProduct } from "../services/ProductoService"; // Importar servicios para crear y actualizar productos
+import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 
-const ProductFormModal = ({show, handleClose, productoId, refreshProducts }) => {
-    const [productData, setProductData] = useState({
-        claveInterna: '',
-        descripcion: '',
+const ProductFormModal = ({ show, onHide, product, onProductSaved }) => {
+  const [formData, setFormData] = useState({
+    nombre: '',
+    codigoBarras: '',
+    precio: 0,
+    existencia: 0,
+    descripcion: '',
+    categoria: ''
+  });
+
+  useEffect(() => {
+    if (product) {
+      setFormData(product);
+    } else {
+      setFormData({
+        nombre: '',
         codigoBarras: '',
-        claveSat: '',
-        tipoIva: '',
-        costo: '',
-        precio: '',
-        categoria: '',
-        unidadVenta: '',
-        existencia: '',
-        existenciaMinima: '',
+        precio: 0,
+        existencia: 0,
+        descripcion: '',
+        categoria: ''
       });
+    }
+  }, [product]);
 
-      const [imageFile, setImageFile] = useState(null);
-      const [isEditMode, setIsEditMode] = useState(false);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
-      useEffect(() => {
-        if (productoId) {
-          setIsEditMode(true);
-          fetchProductData(productoId);
-        } else {
-          setIsEditMode(false);
-          setProductData({
-            claveInterna: '',
-            descripcion: '',
-            codigoBarras: '',
-            claveSat: '',
-            tipoIva: '',
-            costo: '',
-            precio: '',
-            categoria: '',
-            unidadVenta: '',
-            existencia: '',
-            existenciaMinima: '',
-          });
-          setImageFile(null);
-        }
-      }, [productoId]);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (product) {
+        await updateProduct(product.id, formData);
+      } else {
+        await createProduct(formData);
+      }
+      onProductSaved();
+      onHide();
+    } catch (error) {
+      console.error("Error saving product", error);
+    }
+  };
 
-      const fetchProductData = async (id) => {
-        try {
-          const response = await ProductoService.getProductoById(id);
-          setProductData(response.data);
-        } catch (error) {
-          console.error('Error fetching product data', error);
-        }
-      };
-
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setProductData({ ...productData, [name]: value });
-      };
-
-      const handleFileChange = (e) => {
-        setImageFile(e.target.files[0]);
-      };
-
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-          if (isEditMode) {
-            await ProductoService.updateProduct(productoId, productData);
-          } else {
-            const createdProduct = await ProductoService.crearProducto(productData);
-            await ProductoService.uploadProductoImagen(createdProduct.data.id, imageFile);
-          }
-          handleClose();
-          refreshProducts();
-        } catch (error) {
-          console.error('Error saving product', error);
-        }
-      };
-
-
-
-return (
-    <Modal show={show} onHide={handleClose}>
+  return (
+    <Modal show={show} onHide={onHide} size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>{isEditMode ? 'Editar Producto' : 'Crear Producto'}</Modal.Title>
+        <Modal.Title>{product ? "Editar Producto" : "Crear Producto"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="nombre">
-            <Form.Label>Nombre</Form.Label>
-            <Form.Control
-              type="text"
-              name="nombre"
-              value={productData.nombre}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="codigoBarras">
-            <Form.Label>Código de Barras</Form.Label>
-            <Form.Control
-              type="text"
-              name="codigoBarras"
-              value={productData.codigoBarras}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="descripcion">
-            <Form.Label>Descripcion</Form.Label>
-            <Form.Control
-              type="text"
-              name="descripcion"
-              value={productData.descripcion}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="costo">
-            <Form.Label>Costo</Form.Label>
-            <Form.Control
-              type="number"
-              name="costo"
-              value={productData.costo}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="precio">
-            <Form.Label>Precio</Form.Label>
-            <Form.Control
-              type="number"
-              name="precio"
-              value={productData.precio}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="existencia">
-            <Form.Label>Existencia</Form.Label>
-            <Form.Control
-              type="number"
-              name="existencia"
-              value={productData.existencia}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="existenciaMinima">
-            <Form.Label>Existencia Mínima</Form.Label>
-            <Form.Control
-              type="number"
-              name="existenciaMinima"
-              value={productData.existenciaMinima}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="unidadVenta">
-            <Form.Label>Unidad</Form.Label>
-            <Form.Control
-              type="text"
-              name="unidadVenta"
-              value={productData.unidadVenta}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="imagen">
-            <Form.Label>Imagen</Form.Label>
-            <Form.Control
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              required={!isEditMode} // Required solo al crear
-            />
-          </Form.Group>
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="nombre">
+              <Form.Label>Nombre del Producto</Form.Label>
+              <Form.Control
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group as={Col} controlId="codigoDeBarras">
+              <Form.Label>Código de Barras</Form.Label>
+              <Form.Control
+                type="text"
+                name="codigoDeBarras"
+                value={formData.codigoDeBarras}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Row>
+
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="precio">
+              <Form.Label>Precio</Form.Label>
+              <Form.Control
+                type="number"
+                name="precio"
+                value={formData.precio}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group as={Col} controlId="existencia">
+              <Form.Label>Existencia</Form.Label>
+              <Form.Control
+                type="number"
+                name="existencia"
+                value={formData.existencia}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Row>
+
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="descripcion">
+              <Form.Label>Descripción</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="descripcion"
+                value={formData.descripcion}
+                onChange={handleChange}
+              />
+            </Form.Group>
+
+            <Form.Group as={Col} controlId="categoria">
+              <Form.Label>Categoría</Form.Label>
+              <Form.Control
+                type="text"
+                name="categoria"
+                value={formData.categoria}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Row>
+
           <Button variant="primary" type="submit">
-            {isEditMode ? 'Actualizar' : 'Crear'}
+            {product ? "Guardar Cambios" : "Crear Producto"}
           </Button>
         </Form>
       </Modal.Body>

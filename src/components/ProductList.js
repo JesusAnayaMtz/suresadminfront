@@ -1,58 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button } from 'react-bootstrap';
-import ProductoService from '../services/ProductoService';
-import ProductFormModal from './ProductFormModal';
-import * as XLSX from 'xlsx';
-import SearchBar from './SearchBar';
+import React, { useState, useEffect } from "react";
+import { getAllProducts, deleteProduct, activateProduct } from "../services/ProductoService"; // Asegúrate de que las funciones de servicio estén correctamente importadas
+import ProductFormModal from "./ProductFormModal"; // Asegúrate de que esta ruta sea correcta
+import ProductDetailsModal from "./ProductDetailsModal"; // Asegúrate de que esta ruta sea correcta
+import SearchBar from "./SearchBar";
+import { Button, Table } from "react-bootstrap";
+import * as XLSX from "xlsx";
+import { BsEye, BsPencil, BsTrash } from "react-icons/bs";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
-  const [showFormModal, setShowFormModal] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const refreshProducts = async () => {
-    try {
-      const response = await ProductoService.getAllProductos();
-      setProducts(response.data);
-    } catch (error) {
-      console.error('Error fetching products', error);
-    }
-  };
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [viewingProduct, setViewingProduct] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    refreshProducts();
+    fetchProducts();
   }, []);
 
-  const handleCreate = () => {
-    setSelectedProductId(null);
-    setShowFormModal(true);
-  };
-
-  const handleEdit = (id) => {
-    setSelectedProductId(id);
-    setShowFormModal(true);
-  };
-
-  const handleDetails = (id) => {
-    // Lógica para mostrar detalles en otro modal si es necesario
-    console.log('Detalles del producto', id);
+  const fetchProducts = async () => {
+    try {
+      const response = await getAllProducts();
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products", error);
+    }
   };
 
   const handleDelete = async (id) => {
     try {
-      await ProductoService.deleteProduct(id);
-      refreshProducts();
+      await deleteProduct(id);
+      fetchProducts(); // Actualizar la lista después de eliminar
     } catch (error) {
-      console.error('Error deleting product', error);
+      console.error("Error deleting product", error);
     }
   };
 
+  const handleActivate = async (id) => {
+    try {
+      await activateProduct(id);
+      fetchProducts(); // Actualizar la lista después de activar
+    } catch (error) {
+      console.error("Error activating product", error);
+    }
+  };
+
+  const handleEdit = (product) => {
+    setEditingProduct(product);
+    setShowModal(true);
+  };
+
+  const handleCreate = () => {
+    setEditingProduct(null);
+    setShowModal(true);
+  };
+
+  const handleViewDetails = (product) => {
+    setViewingProduct(product);
+    setShowDetailsModal(true);
+  };
 
   const filteredProducts = products.filter(
     (product) =>
       product.claveInterna.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.codigoBarras.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -61,12 +72,12 @@ const ProductList = () => {
     const worksheet = XLSX.utils.json_to_sheet(products); // Convertir datos a hoja Excel
     const workbook = XLSX.utils.book_new(); // Crear un nuevo libro Excel
     XLSX.utils.book_append_sheet(workbook, worksheet, "Productos"); // Agregar la hoja
-    XLSX.writeFile(workbook, "productos.xlsx"); // Descargar el archivo como "clientes.xlsx"
+    XLSX.writeFile(workbook, "productos.xlsx"); // Descargar el archivo como "productos.xlsx"
   };
 
   return (
-      <div>
-      <h2 className="text-center">Gestión de Clientes</h2>
+    <div>
+      <h2 className="text-center">Gestión de Productos</h2>
       <div>
         <div className="row">
           <div className="col-md-1 mb-3">
@@ -80,8 +91,8 @@ const ProductList = () => {
               Crear Producto
             </Button>
           </div>
-          </div>
-         <div className="col-md-12 text-end">
+        </div>
+        <div className="col-md-12 text-end">
           <Button
             onClick={exportToExcel}
             variant="success"
@@ -97,25 +108,38 @@ const ProductList = () => {
           <tr>
             <th>Nombre</th>
             <th>Código de Barras</th>
-            <th>Costo</th>
             <th>Precio</th>
+            <th>Existencia</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {filteredProducts.map((product) => (
             <tr key={product.id}>
-              <td>{product.nombre}</td>
+              <td>{product.claveInterna}</td>
               <td>{product.codigoBarras}</td>
-              <td>{product.costo}</td>
               <td>{product.precio}</td>
+              <td>{product.existencia}</td>
               <td>
-                <Button onClick={() => handleEdit(product.id)}>Editar</Button>
-                <Button onClick={() => handleDelete(product.id)} variant="danger" className="ms-2">
-                  Eliminar
-                </Button>
-                <Button onClick={() => handleDetails(product.id)} variant="info" className="ms-2">
-                  Detalles
+                <Button
+                  variant="primary"
+                  onClick={() => handleViewDetails(product)}
+                  className="me-2"
+                >
+                  <BsEye size={24} color="black" />
+                </Button>{" "}
+                <Button
+                  variant="warning"
+                  onClick={() => handleEdit(product)}
+                  className="me-2"
+                >
+                  <BsPencil size={24} />
+                </Button>{" "}
+                <Button
+                  variant="danger"
+                  onClick={() => handleDelete(product.id)}
+                >
+                  <BsTrash size={24} color="black" />
                 </Button>
               </td>
             </tr>
@@ -123,12 +147,22 @@ const ProductList = () => {
         </tbody>
       </Table>
 
-      <ProductFormModal 
-        show={showFormModal} 
-        handleClose={() => setShowFormModal(false)} 
-        productId={selectedProductId} 
-        refreshProducts={refreshProducts} 
-      />
+      {showModal && (
+        <ProductFormModal
+          show={showModal}
+          onHide={() => setShowModal(false)}
+          product={editingProduct}
+          onProductSaved={fetchProducts} // Actualiza la lista de productos después de guardar
+        />
+      )}
+
+      {showDetailsModal && (
+        <ProductDetailsModal
+          show={showDetailsModal}
+          onHide={() => setShowDetailsModal(false)}
+          product={viewingProduct}
+        />
+      )}
     </div>
   );
 };

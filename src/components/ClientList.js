@@ -91,8 +91,8 @@ const ClientList = () => {
               Crear Cliente
             </Button>
           </div>
-        </div>
-        <div className="col-md-12 text-end">
+          </div>
+         <div className="col-md-12 text-end">
           <Button
             onClick={exportToExcel}
             variant="success"
