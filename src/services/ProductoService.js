@@ -5,6 +5,9 @@ const API_URL = 'http://localhost:8080/api/productos';
 // Obtener todos los productos
 export const getAllProducts = () => axios.get(API_URL);
 
+// Obtener todos los productos activos
+export const getAllProductsActivos = () => axios.get(`${API_URL}/activos`);
+
 // Obtener producto por ID
 export const getProductById = (id) => axios.get(`${API_URL}/${id}`);
 

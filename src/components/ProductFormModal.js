@@ -15,7 +15,6 @@ const ProductFormModal = ({ show, onHide, product, onProductSaved }) => {
     categoria: "",
     existencia: 0,
     existenciaMinima: 0,
-    categoria: "",
     unidadVenta: "",
   });
 
@@ -36,7 +35,6 @@ const ProductFormModal = ({ show, onHide, product, onProductSaved }) => {
         categoria: "",
         existencia: 0,
         existenciaMinima: 0,
-        categoria: "",
         unidadVenta: "",
       });
       setImageFile(null);
@@ -76,13 +74,17 @@ const handleSubmit = async (e) => {
     onProductSaved();
     onHide();
   } catch (error) {
-    console.error("Error saving product", error);
+    if(error.response && error.response.data) {
     Swal.fire({
       icon: "error",
       title: "Error",
-      text: "Ocurrió un error al guardar el producto",
+      text: error.response.data.message,
+      confirmButtonText: "Aceptar",
     });
+  } else {
+    console.error("Error saving product", error);
   }
+}
 };
 
   return (
@@ -188,6 +190,7 @@ const handleSubmit = async (e) => {
                 <option value="EQUIPO_DE_PROTECCION">
                   Equipo De Proteccion
                 </option>
+                <option value="INSUMOS">Insumos</option>
               </Form.Select>
             </Form.Group>
           </Row>

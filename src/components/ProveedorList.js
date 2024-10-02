@@ -4,7 +4,9 @@ import { Button, Table} from "react-bootstrap";
 import { activateProveedor, deleteProveedor, getAllProveedores } from "../services/proveedorService";
 import ProveedorFormModal from "./ProveedorFormModal";
 import ProveedorDetailsModal from "./ProveedorDetailsModal";
+import { BsEye, BsPencil, BsTrash } from "react-icons/bs";
 import * as XLSX from "xlsx";
+import Swal from "sweetalert2";
 
 
 const ProveedorList = () => {
@@ -30,9 +32,34 @@ const ProveedorList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteProveedor(id);
-      fetchProveedores(); // Actualizar la lista después de eliminar
+      const result = await Swal.fire({
+        title: "¿Estas Seguro?",
+        text: "No podras revertir esta accion",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, Eliminar",
+        cancelButtonText: "Cancelar",
+      });
+      if(result.isConfirmed){
+        await deleteProveedor(id);
+        Swal.fire({
+          icon: "success",
+          title: "Eliminado",
+          text: "El proveedor ha sido eliminado correctamente",
+          confirmButtonText: "Aceptar",
+        });
+        fetchProveedores(); // Actualizar la lista después de eliminar
+      }
+
     } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un error al eliminar el producto",
+        confirmButtonText: "Aceptar",
+      });
       console.error("Error deleting proveedor", error);
     }
   };
@@ -122,19 +149,22 @@ const ProveedorList = () => {
               <td>{proveedor.telefono}</td>
               <td>
                 <Button
-                  variant="info"
+                  variant="primary"
                   onClick={() => handleViewDetails(proveedor)}
+                  className="me-2"
                 >
-                  Ver Detalles
+                  <BsEye size={24} color="black"/>
                 </Button>{" "}
-                <Button variant="warning" onClick={() => handleEdit(proveedor)}>
-                  Editar
+                <Button variant="warning" 
+                onClick={() => handleEdit(proveedor)}
+                className="me-2">
+                  <BsPencil size={24}/>
                 </Button>{" "}
                 <Button
                   variant="danger"
                   onClick={() => handleDelete(proveedor.id)}
                 >
-                  Eliminar
+                  <BsTrash size={24} color="black" />
                 </Button>
               </td>
             </tr>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createProveedor, updateProveedor } from "../services/proveedorService";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 const ProveedorFormModal = ({ show, onHide, proveedor, onProveedorSaved }) => {
   const [formData, setFormData] = useState({
@@ -54,13 +55,32 @@ const ProveedorFormModal = ({ show, onHide, proveedor, onProveedorSaved }) => {
     try {
       if (proveedor) {
         await updateProveedor(proveedor.id, formData);
+        Swal.fire({
+          icon: "success",
+          title: "Proveedor Actualizado",
+          text: "El proveedor se actualizo correctamente",
+        });
       } else {
         await createProveedor(formData);
+        Swal.fire({
+          icon: "success",
+          title: "Proveedor Creado",
+          text: "El proveedor se ah creado correctamente",
+        })
       }
       onProveedorSaved();
       onHide();
     } catch (error) {
-      console.error("Error saving proveedor", error);
+      if(error.response && error.response.data){
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "El existe un proveedor con ese rfc",
+          confirmButtonText: "Aceptar",
+        });
+      } else {
+        console.error("Error saving proveedor", error);
+      }
     }
   };
 
@@ -215,8 +235,36 @@ const ProveedorFormModal = ({ show, onHide, proveedor, onProveedorSaved }) => {
               <option>Seleccione una opcion</option>
               <option value="AGUASCALIENTES">Aguascalientes</option>
               <option value="BAJA_CALIFORNIA">Baja California</option>
+              <option value="BAJA_CALIFORNIA_SUR">Baja California Sur</option>
+              <option value="CAMPECHE">Campeche</option>
+              <option value="CHIAPAS">Chiapas</option>
+              <option value="CHIHUAHUA">Chihuahua</option>
+              <option value="COAHUILA">Coahuila</option>
+              <option value="COLIMA">Colima</option>
+              <option value="CDMX">Cdmx</option>
+              <option value="DURANGO">Durango</option>
+              <option value="GUANAJUATO">Guanajuato</option>
+              <option value="GUERRERO">Guerrero</option>
+              <option value="HIDALGO">Hidalgo</option>
+              <option value="JALISCO">Jalisco</option>
+              <option value="MEXICO">Mexico</option>
+              <option value="MICHOACAN">Michoacan</option>
+              <option value="MORELOS">Morelos</option>
+              <option value="NAYARIT">Nayarit</option>
               <option value="NUEVO_LEON">Nuevo Leon</option>
-              <option value="CDMX">CDMX</option>
+              <option value="OAXACA">Oaxaca</option>
+              <option value="PUEBLA">Puebla</option>
+              <option value="QUERETARO">Queretaro</option>
+              <option value="QUINTANA_ROO">Quintana Roo</option>
+              <option value="SAN_LUIS_POTOSI">San Luis Potosi</option>
+              <option value="SINALOA">Sinaloa</option>
+              <option value="SONORA">Sonora</option>
+              <option value="TABASCO">Tabasco</option>
+              <option value="TAMAULIPAS">Tamaulipas</option>
+              <option value="TLAXCALA">Tlaxcala</option>
+              <option value="VERACRUZ">Veracruz</option>
+              <option value="YUCATAN">Yucatan</option>
+              <option value="ZACATECAS">Zacatecas</option>
               </Form.Select>
           </Form.Group>
           </Row>

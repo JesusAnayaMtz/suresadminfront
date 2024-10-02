@@ -6,6 +6,7 @@ import SearchBar from "./SearchBar";
 import { Button, Table} from "react-bootstrap";
 import * as XLSX from 'xlsx';
 import { BsEye, BsPencil, BsTrash } from "react-icons/bs";
+import Swal from "sweetalert2";
 
 const ClientList = () => {
   const [clients, setClients] = useState([]);
@@ -30,9 +31,33 @@ const ClientList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteClient(id);
-      fetchClients(); // Actualizar la lista después de eliminar
+      const result = await Swal.fire({
+        title: "¿Estas Seguro?",
+        text: "No podras revertir esta accion",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, Eliminar",
+        cancelButtonText: "Cancelar",
+      });
+      if(result.isConfirmed){
+        await deleteClient(id);
+        Swal.fire({
+          icon: "success",
+          title: "Eliminado",
+          text: "El cliente ha sido eliminado correctamente",
+          confirmButtonText: "Aceptar",
+        });
+        fetchClients(); // Actualizar la lista después de eliminar
+      }     
     } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un error al eliminar el producto",
+        confirmButtonText: "Aceptar",
+      });
       console.error("Error deleting client", error);
     }
   };

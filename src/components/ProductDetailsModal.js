@@ -88,7 +88,6 @@ const ProductDetailsModal = ({ show, onHide, product }) => {
               />
             </Form.Group>
             <Form.Group as={Col} controlId="rutaImagen">
-              <Form.Label>Imagen</Form.Label>
               <Image
                 alt="rutaImagen"
                 src={imageUrl}

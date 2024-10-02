@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { getAllProducts, deleteProduct, activateProduct } from "../services/ProductoService"; // Asegúrate de que las funciones de servicio estén correctamente importadas
+import { getAllProductsActivos, deleteProduct, activateProduct } from "../services/ProductoService"; // Asegúrate de que las funciones de servicio estén correctamente importadas
 import ProductFormModal from "./ProductFormModal"; // Asegúrate de que esta ruta sea correcta
 import ProductDetailsModal from "./ProductDetailsModal"; // Asegúrate de que esta ruta sea correcta
 import SearchBar from "./SearchBar";
 import { Button, Table } from "react-bootstrap";
 import * as XLSX from "xlsx";
 import { BsEye, BsPencil, BsTrash } from "react-icons/bs";
+import Swal from "sweetalert2";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -21,7 +22,7 @@ const ProductList = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await getAllProducts();
+      const response = await getAllProductsActivos();
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products", error);
@@ -30,12 +31,36 @@ const ProductList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteProduct(id);
-      fetchProducts(); // Actualizar la lista después de eliminar
+      const result = await Swal.fire({
+        title: "¿Estas Seguro?",
+        text: "No podras revertir esta accion",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, Eliminar",
+        cancelButtonText: "Cancelar",
+      });
+      if(result.isConfirmed){
+        await deleteProduct(id);
+        Swal.fire({
+          icon: "success",
+          title: "Eliminado",
+          text: "El producto ha sido eliminado correctamente",
+          confirmButtonText: "Aceptar",
+        });
+        fetchProducts(); // Actualizar la lista después de eliminar
+      }
     } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un error al eliminar el producto",
+        confirmButtonText: "Aceptar",
+      });
       console.error("Error deleting product", error);
     }
-  };
+  };  
 
   const handleActivate = async (id) => {
     try {
@@ -63,8 +88,9 @@ const ProductList = () => {
 
   const filteredProducts = products.filter(
     (product) =>
-      product.claveInterna.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.codigoBarras.toLowerCase().includes(searchTerm.toLowerCase())
+      product.claveInterna.includes(searchTerm) ||
+      product.codigoBarras.includes(searchTerm) ||
+      product.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Función para exportar a Excel
