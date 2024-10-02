@@ -106,7 +106,8 @@ const ProductList = () => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Nombre</th>
+            <th>Clave Interna</th>
+            <th>Deescripcion</th>
             <th>Código de Barras</th>
             <th>Precio</th>
             <th>Existencia</th>
@@ -117,6 +118,7 @@ const ProductList = () => {
           {filteredProducts.map((product) => (
             <tr key={product.id}>
               <td>{product.claveInterna}</td>
+              <td>{product.descripcion}</td>
               <td>{product.codigoBarras}</td>
               <td>{product.precio}</td>
               <td>{product.existencia}</td>

@@ -8,6 +8,11 @@ export const getAllProducts = () => axios.get(API_URL);
 // Obtener producto por ID
 export const getProductById = (id) => axios.get(`${API_URL}/${id}`);
 
+// Obtener imagen por nombre
+export const getProductImage = (imageName) => {
+  return `${API_URL}/${imageName}`;
+};
+
 // Crear producto sin imagen
 export const createProduct = async (productData, imageFile) => {
   try {
