@@ -5,7 +5,7 @@ import { getAllProductsActivos } from "../services/ProductoService";
 
 const NavBar = () => {
   const [notifications, setNotifications] = useState([]);
-  const [products, setProducts] = useState([]);
+
 
   useEffect(() => {
     // Cargar notificaciones de productos con existencia mínima

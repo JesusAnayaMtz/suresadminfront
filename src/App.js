@@ -12,7 +12,7 @@ const App = () => {
   return (
     <Router>
       <NavBar></NavBar>
-      <div className="d-flex">
+     <div className="d-flex">
         <Sidebar />
         <main className="content flex-grow-1 p-3">
           <Routes>
