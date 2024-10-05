@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { Nav } from "react-bootstrap";
-import { BsHouse, BsPeople, BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
+import {
+  BsHouse,
+  BsPeople,
+  BsChevronDoubleLeft,
+  BsChevronDoubleRight,
+} from "react-icons/bs";
+import { AiOutlineFileText } from "react-icons/ai";
 import { SlSocialDropbox } from "react-icons/sl";
 import "./Sidebar.css";
 
@@ -44,9 +50,8 @@ const Sidebar = () => {
       icon: <BsPeople className="icon" />,
       items: [
         { href: "/clientes", title: "Lista de Clientes" },
-        { href: "/clientes/nuevo", title: "Nuevo Cliente" },
         { href: "/clientes/reportes", title: "Reportes" },
-      ]
+      ],
     },
     {
       name: "proveedores",
@@ -54,9 +59,8 @@ const Sidebar = () => {
       icon: <BsPeople className="icon" />,
       items: [
         { href: "/proveedores", title: "Lista de Proveedores" },
-        { href: "/proveedores/nuevo", title: "Nuevo Proveedor" },
         { href: "/proveedores/pedidos", title: "Pedidos" },
-      ]
+      ],
     },
     {
       name: "productos",
@@ -64,10 +68,16 @@ const Sidebar = () => {
       icon: <SlSocialDropbox className="icon" />,
       items: [
         { href: "/productos", title: "Catálogo" },
-        { href: "/productos/nuevo", title: "Nuevo Producto" },
-        { href: "/productos/inventario", title: "Inventario" },
-      ]
-    }
+      ],
+    },
+    {
+      name: "cotizaciones",
+      title: "Cotizaciones",
+      icon: <AiOutlineFileText className="icon" />,
+      items: [
+        { href: "/cotizaciones", title: "Lista de Cotizaciones" },
+      ],
+    },
   ];
 
   return (

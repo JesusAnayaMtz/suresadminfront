@@ -6,13 +6,14 @@ import Sidebar from "./components/Sidebar";
 import ProveedorPage from "./pages/ProveedorPage";
 import ProductsPage from "./pages/ProductsPage";
 import NavBar from "./components/NavBar";
+import CotizacionesPage from "./pages/CotizacionesPage";
 
 
 const App = () => {
   return (
     <Router>
       <NavBar></NavBar>
-     <div className="d-flex">
+      <div className="d-flex">
         <Sidebar />
         <main className="content flex-grow-1 p-3">
           <Routes>
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/clientes" element={<ClientsPage />} />
             <Route path="/proveedores" element={<ProveedorPage />} />
             <Route path="/productos" element={<ProductsPage />} />
+            <Route path="/cotizaciones" element={<CotizacionesPage />} />
           </Routes>
         </main>
       </div>
