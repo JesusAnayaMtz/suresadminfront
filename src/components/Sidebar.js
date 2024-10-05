@@ -80,7 +80,7 @@ const Sidebar = () => {
       </div>
       <Nav className="flex-column">
         <Nav.Link href="/" className="sidebar-item home-link">
-          <BsHouse className="icon" />
+          <BsHouse className="icon" color="black" />
           {!isCollapsed && <span>Inicio</span>}
         </Nav.Link>
         {menuItems.map((item) => (
