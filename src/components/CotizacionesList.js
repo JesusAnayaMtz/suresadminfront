@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { getAllCotizaciones } from "../services/CotizacionService";
+import {
+  getAllCotizaciones,
+  deleteCotizacion,
+} from "../services/CotizacionService";
+import CotizacionDetailsModal from "./CotizacionDetailsModal";
+import CotizacionFormModal from "./CotizacionFormModal";
 import SearchBar from "./SearchBar";
 import { Button, Table } from "react-bootstrap";
 import * as XLSX from "xlsx";
-import { BsEye } from "react-icons/bs";
-import CotizacionDetailsModal from "./CotizacionDetailsModal";
+import { BsEye, BsPencil, BsTrash } from "react-icons/bs";
+import Swal from "sweetalert2";
 
 const CotizacionesList = () => {
   const [cotizaciones, setCotizaciones] = useState([]);
   const [viewingCotizacion, setViewingCotizacion] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showFormModal, setShowFormModal] = useState(false);
+  const [editingCotizacion, setEditingCotizacion] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterDate, setFilterDate] = useState("");
 
   useEffect(() => {
     fetchCotizaciones();
@@ -20,10 +26,15 @@ const CotizacionesList = () => {
   const fetchCotizaciones = async () => {
     try {
       const response = await getAllCotizaciones();
-        console.log(response.data);
       setCotizaciones(response.data);
     } catch (error) {
       console.error("Error fetching cotizaciones", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un error al cargar las cotizaciones",
+        confirmButtonText: "Aceptar",
+      });
     }
   };
 
@@ -32,48 +43,79 @@ const CotizacionesList = () => {
     setShowDetailsModal(true);
   };
 
-const filteredCotizaciones = cotizaciones.filter((cotizacion) => {
-  const cliente = cotizacion.cliente || {};
-  return (
-    (cliente.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cliente.rfc?.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (filterDate === "" || cotizacion.fechaCreacion.includes(filterDate))
+  const handleEditCotizacion = (cotizacion) => {
+    setEditingCotizacion(cotizacion);
+    setShowFormModal(true);
+  };
+
+  const handleDeleteCotizacion = async (cotizacionId) => {
+    try {
+      const result = await Swal.fire({
+        title: "¿Estás seguro?",
+        text: "No podrás revertir esta acción",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (result.isConfirmed) {
+        await deleteCotizacion(cotizacionId);
+        Swal.fire("Eliminado", "La cotización ha sido eliminada", "success");
+        fetchCotizaciones();
+      }
+    } catch (error) {
+      console.error("Error deleting cotización", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un error al eliminar la cotización",
+        confirmButtonText: "Aceptar",
+      });
+    }
+  };
+
+  const filteredCotizaciones = cotizaciones.filter(
+    (cotizacion) =>
+      cotizacion.cliente.nombre
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      cotizacion.fechaCreacion.includes(searchTerm)
   );
-});
 
   // Función para exportar a Excel
   const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(cotizaciones); // Convertir datos a hoja Excel
-    const workbook = XLSX.utils.book_new(); // Crear un nuevo libro Excel
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Cotizaciones"); // Agregar la hoja
-    XLSX.writeFile(workbook, "cotizaciones.xlsx"); // Descargar el archivo como "cotizaciones.xlsx"
+    const worksheet = XLSX.utils.json_to_sheet(cotizaciones);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Cotizaciones");
+    XLSX.writeFile(workbook, "cotizaciones.xlsx");
   };
 
   return (
     <div>
-      <h2 className="text-center">Gestión de Cotizaciones</h2>
+      <h2 className="text-center">Listado de Cotizaciones</h2>
       <div>
         <div className="row">
           <div className="col-md-1 mb-3">
             <p className="mt-2 text-center">Buscar</p>
           </div>
-          <div className="col-md-5">
+          <div className="col-md-7">
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </div>
-          <div className="col-md-3">
-            <input
-              type="date"
-              className="form-control"
-              value={filterDate}
-              onChange={(e) => setFilterDate(e.target.value)}
-            />
-          </div>
-          <div className="col-md-3 text-end">
+          <div className="col-md-4 text-end">
+            <Button
+              onClick={() => setShowFormModal(true)}
+              variant="primary"
+              size="sm"
+              className="me-2 mb-3"
+            >
+              Crear Cotización
+            </Button>
             <Button
               onClick={exportToExcel}
               variant="success"
               size="sm"
-              className="mb-3 primary"
+              className="mb-3"
             >
               Exportar a Excel
             </Button>
@@ -84,9 +126,9 @@ const filteredCotizaciones = cotizaciones.filter((cotizacion) => {
         <thead>
           <tr>
             <th>Cliente</th>
-            <th>RFC</th>
             <th>Fecha de Creación</th>
             <th>Subtotal</th>
+            <th>Descuento Adicional</th>
             <th>Total</th>
             <th>Acciones</th>
           </tr>
@@ -94,11 +136,11 @@ const filteredCotizaciones = cotizaciones.filter((cotizacion) => {
         <tbody>
           {filteredCotizaciones.map((cotizacion) => (
             <tr key={cotizacion.id}>
-              <td>{cotizacion.clienteId.nombre}</td>
-              
+              <td>{cotizacion.cliente.nombre}</td>
               <td>{cotizacion.fechaCreacion}</td>
-              <td>{cotizacion.subtotal.toFixed(2)}</td>
-              <td>{cotizacion.total.toFixed(2)}</td>
+              <td>{cotizacion.subtotal}</td>
+              <td>{cotizacion.descuentoAdicional}%</td>
+              <td>{cotizacion.total}</td>
               <td>
                 <Button
                   variant="primary"
@@ -106,6 +148,19 @@ const filteredCotizaciones = cotizaciones.filter((cotizacion) => {
                   className="me-2"
                 >
                   <BsEye size={24} color="black" />
+                </Button>
+                <Button
+                  variant="warning"
+                  onClick={() => handleEditCotizacion(cotizacion)}
+                  className="me-2"
+                >
+                  <BsPencil size={24} color="black" />
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => handleDeleteCotizacion(cotizacion.id)}
+                >
+                  <BsTrash size={24} color="black" />
                 </Button>
               </td>
             </tr>
@@ -118,6 +173,18 @@ const filteredCotizaciones = cotizaciones.filter((cotizacion) => {
           show={showDetailsModal}
           onHide={() => setShowDetailsModal(false)}
           cotizacion={viewingCotizacion}
+        />
+      )}
+
+      {showFormModal && (
+        <CotizacionFormModal
+          show={showFormModal}
+          onHide={() => {
+            setShowFormModal(false);
+            setEditingCotizacion(null);
+          }}
+          cotizacion={editingCotizacion}
+          onSave={fetchCotizaciones}
         />
       )}
     </div>
