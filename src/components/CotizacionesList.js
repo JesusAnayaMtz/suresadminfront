@@ -176,17 +176,17 @@ const CotizacionesList = () => {
         />
       )}
 
-      {showFormModal && (
-        <CotizacionFormModal
-          show={showFormModal}
-          onHide={() => {
-            setShowFormModal(false);
-            setEditingCotizacion(null);
-          }}
-          cotizacion={editingCotizacion}
-          onSave={fetchCotizaciones}
-        />
-      )}
+{showFormModal && (
+  <CotizacionFormModal
+    show={showFormModal}
+    onHide={() => {
+      setShowFormModal(false);
+      setEditingCotizacion(null);
+    }}
+    initialData={editingCotizacion} // Cambiar cotizacion a initialData
+    onSave={fetchCotizaciones}
+  />
+)}
     </div>
   );
 };
