@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import { getAllClients } from "../services/clienteService";
 import { getAllProductsActivos } from "../services/ProductoService";
@@ -11,16 +11,35 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
   const [selectedCliente, setSelectedCliente] = useState(null);
   const [selectedProductos, setSelectedProductos] = useState([]);
   const [descuentoAdicional, setDescuentoAdicional] = useState(0);
+  const [isModified, setIsModified] = useState(false);
+
+  const checkIfModified = useCallback (() => {
+    if (!initialData) return true;
+    const productosChanged = selectedProductos.some((p, index) => 
+      p.productoId !== initialData.productos[index]?.productoId ||
+      p.cantidad !== initialData.productos[index]?.cantidad ||
+      p.descuento !== initialData.productos[index]?.descuento
+    );
+    return (
+      selectedCliente !== initialData.cliente?.id ||
+      productosChanged ||
+      descuentoAdicional !== initialData.descuentoAdicional
+    );
+  }, [initialData, selectedCliente, selectedProductos, descuentoAdicional]);
 
   useEffect(() => {
     fetchClientes();
     fetchProductos();
     if (initialData) {
       setSelectedCliente(initialData.cliente?.id || null);
-      setSelectedProductos(initialData.productos.map(p => ({ ...p }))); // Clonar productos
+      setSelectedProductos(initialData.productos.map(p => ({ ...p })));
       setDescuentoAdicional(initialData.descuentoAdicional || 0);
     }
   }, [initialData]);
+
+  useEffect(() => {
+    setIsModified(checkIfModified());
+  }, [checkIfModified]);
 
   const fetchClientes = async () => {
     try {
@@ -59,11 +78,10 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
       [field]: value,
     };
 
-    // Si se cambia el producto a uno que ya existe, aumentar la cantidad
     const existingProductIndex = updatedProductos.findIndex((p) => p.productoId === value);
     if (existingProductIndex !== -1 && existingProductIndex !== index) {
-      updatedProductos[existingProductIndex].cantidad += updatedProductos[index].cantidad; // Sumar cantidades
-      updatedProductos.splice(index, 1); // Eliminar el producto actual
+      updatedProductos[existingProductIndex].cantidad += updatedProductos[index].cantidad;
+      updatedProductos.splice(index, 1);
     }
     
     setSelectedProductos(updatedProductos);
@@ -83,7 +101,7 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
     let subtotal = 0;
     selectedProductos.forEach((producto) => {
       const { cantidad, descuento } = producto;
-      const precioProducto = productos.find(p => p.id === producto.productoId)?.precio || 0; // Asumiendo que tienes un campo precio
+      const precioProducto = productos.find(p => p.id === producto.productoId)?.precio || 0;
       const precioConDescuento = precioProducto * (1 - descuento / 100);
       subtotal += precioConDescuento * cantidad;
     });
@@ -110,7 +128,6 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
 
     try {
       if (initialData && initialData.id) {
-        // Actualizar cotización existente
         await updateCotizacion(initialData.id, payload);
         Swal.fire({
           icon: "success",
@@ -119,7 +136,6 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
           confirmButtonText: "Aceptar",
         });
       } else {
-        // Crear una nueva cotización
         await createCotizacion(payload);
         Swal.fire({
           icon: "success",
@@ -128,8 +144,8 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
           confirmButtonText: "Aceptar",
         });
       }
-      onSave(); // Llama a la función onSave pasada como prop
-      onHide(); // Cierra el modal después de guardar
+      onSave();
+      onHide();
     } catch (error) {
       console.error("Error al guardar la cotización:", error);
       Swal.fire({
@@ -219,7 +235,7 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>Cancelar</Button>
-        <Button variant="primary" onClick={handleSave}>Guardar</Button>
+        <Button variant="primary" onClick={handleSave} disabled={!isModified}>Guardar</Button>
       </Modal.Footer>
     </Modal>
   );

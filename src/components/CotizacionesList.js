@@ -8,8 +8,10 @@ import CotizacionFormModal from "./CotizacionFormModal";
 import SearchBar from "./SearchBar";
 import { Button, Table } from "react-bootstrap";
 import * as XLSX from "xlsx";
-import { BsEye, BsPencil, BsTrash } from "react-icons/bs";
+import { BsEye, BsPencil, BsTrash, BsFileEarmarkPdf } from "react-icons/bs";
 import Swal from "sweetalert2";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const CotizacionesList = () => {
   const [cotizaciones, setCotizaciones] = useState([]);
@@ -91,6 +93,53 @@ const CotizacionesList = () => {
     XLSX.writeFile(workbook, "cotizaciones.xlsx");
   };
 
+  // Función para exportar a PDF
+  const exportCotizacionToPDF = (cotizacion) => {
+    const doc = new jsPDF();
+    const logo = new Image();
+    logo.src = 'logo3.jpg'; // Asegúrate de que la ruta de la imagen es correcta
+    
+    logo.onload = function() {
+      doc.addImage(logo, 'JPEG', 14, 18, 30, 30);
+      doc.setFontSize(14);
+      doc.text(`Cotización: ${cotizacion.id}`, 47, 22);
+      doc.setFontSize(12);
+      doc.text(`Cliente: ${cotizacion.cliente.nombre}`, 47, 30);
+      doc.text(`Direccion: ${cotizacion.cliente.direccion}`, 47, 36);
+      doc.text(`${cotizacion.cliente.colonia}, ${cotizacion.cliente.ciudad}, ${(cotizacion.cliente.estado)} `, 47, 42)
+      doc.text(`RFC: ${cotizacion.cliente.rfc}`, 47, 48);
+      doc.text(`Fecha: ${cotizacion.fechaCreacion}`, 150, 22);
+  
+      const productos = cotizacion.productos.map((prod) => [
+        prod.nombre,
+        prod.cantidad,
+        `$${prod.precio}`,
+        `${prod.descuento}%`,
+        `$${prod.importe}`,
+      ]);
+  
+      doc.autoTable({
+        head: [["Producto", "Cantidad", "Precio", "Descuento", "Importe"]],
+        body: productos,
+        startY: 60,
+      });
+
+      doc.text(`Subtotal: $${cotizacion.subtotal}`, 164, doc.lastAutoTable.finalY + 10);
+      doc.text(`Descuento Extra: ${cotizacion.descuentoAdicional}%`, 154, doc.lastAutoTable.finalY + 16);
+      doc.text(`Total: $${cotizacion.total}`, 170, doc.lastAutoTable.finalY + 22);
+
+      doc.text("Notas:", 14, 180);
+      doc.text("A. Cambio de precios sin previo aviso.", 14, 186);
+      doc.text("B. Condiciones de pago: a convenir con el departamento de comprar.", 14, 192);
+      doc.text("C. Tiempo de entrega: de 1 a 3 dias habiles dependiendo la existencia.", 14, 198);
+      doc.text("D. Se requiere orden de compra para autorizar la presente cotizacion.", 14, 204);
+      doc.text("E. Vigencia de la presente cotizacion: 3 dias naturales.", 14, 210);
+  
+      // Guardar PDF después de agregar la imagen
+      doc.save(`cotizacion_${cotizacion.cliente.nombre}_${cotizacion.id}.pdf`);
+    };
+  };
+
   return (
     <div>
       <h2 className="text-center">Listado de Cotizaciones</h2>
@@ -159,8 +208,15 @@ const CotizacionesList = () => {
                 <Button
                   variant="danger"
                   onClick={() => handleDeleteCotizacion(cotizacion.id)}
+                  className="me-2"
                 >
                   <BsTrash size={24} color="black" />
+                </Button>
+                <Button
+                  variant="info"
+                  onClick={() => exportCotizacionToPDF(cotizacion)}
+                >
+                  <BsFileEarmarkPdf size={24} color="black" />
                 </Button>
               </td>
             </tr>
@@ -176,17 +232,17 @@ const CotizacionesList = () => {
         />
       )}
 
-{showFormModal && (
-  <CotizacionFormModal
-    show={showFormModal}
-    onHide={() => {
-      setShowFormModal(false);
-      setEditingCotizacion(null);
-    }}
-    initialData={editingCotizacion} // Cambiar cotizacion a initialData
-    onSave={fetchCotizaciones}
-  />
-)}
+      {showFormModal && (
+        <CotizacionFormModal
+          show={showFormModal}
+          onHide={() => {
+            setShowFormModal(false);
+            setEditingCotizacion(null);
+          }}
+          initialData={editingCotizacion}
+          onSave={fetchCotizaciones}
+        />
+      )}
     </div>
   );
 };
