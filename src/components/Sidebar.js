@@ -59,7 +59,7 @@ const Sidebar = () => {
       icon: <BsPeople className="icon" />,
       items: [
         { href: "/proveedores", title: "Lista de Proveedores" },
-        { href: "/proveedores/pedidos", title: "Pedidos" },
+        { href: "/ordenescompra", title: "Ordenes de compra" },
       ],
     },
     {

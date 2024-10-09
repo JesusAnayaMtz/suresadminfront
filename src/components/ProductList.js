@@ -113,12 +113,13 @@ const ProductList = () => {
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </div>
           <div className="col-md-4 text-end">
-            <Button onClick={handleCreate} className="mb-3">
+            <Button 
+            onClick={handleCreate}
+             variant="primary"
+             size="sm"
+            className="me-2 mb-3">
               Crear Producto
             </Button>
-          </div>
-        </div>
-        <div className="col-md-12 text-end">
           <Button
             onClick={exportToExcel}
             variant="success"
@@ -127,6 +128,7 @@ const ProductList = () => {
           >
             Exportar a Excel
           </Button>
+          </div>
         </div>
       </div>
       <Table striped bordered hover>

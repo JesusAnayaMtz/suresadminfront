@@ -97,7 +97,7 @@ const CotizacionesList = () => {
   const exportCotizacionToPDF = (cotizacion) => {
     const doc = new jsPDF();
     const logo = new Image();
-    logo.src = 'logo3.jpg'; // Asegúrate de que la ruta de la imagen es correcta
+    logo.src = 'logo3.jpg'; 
     
     logo.onload = function() {
       doc.addImage(logo, 'JPEG', 14, 18, 30, 30);
@@ -124,9 +124,9 @@ const CotizacionesList = () => {
         startY: 60,
       });
 
-      doc.text(`Subtotal: $${cotizacion.subtotal}`, 164, doc.lastAutoTable.finalY + 10);
+      doc.text(`Subtotal: $${cotizacion.subtotal}`, 160, doc.lastAutoTable.finalY + 10);
       doc.text(`Descuento Extra: ${cotizacion.descuentoAdicional}%`, 154, doc.lastAutoTable.finalY + 16);
-      doc.text(`Total: $${cotizacion.total}`, 170, doc.lastAutoTable.finalY + 22);
+      doc.text(`Total: $${cotizacion.total}`, 162, doc.lastAutoTable.finalY + 22);
 
       doc.text("Notas:", 14, 180);
       doc.text("A. Cambio de precios sin previo aviso.", 14, 186);
