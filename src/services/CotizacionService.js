@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/cotizaciones";
+//const API_URL = "http://localhost:8080/api/cotizaciones";
+const API_URL = "https://suresback.uc.r.appspot.com/api/cotizaciones";
+
 
 export const getAllCotizaciones = () => axios.get(API_URL);
 export const getCotizacionById = (id) => axios.get(`${API_URL}/${id}`);

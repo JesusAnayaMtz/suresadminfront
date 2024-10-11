@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:8080/api/productos';
+//const API_URL = 'http://localhost:8080/api/productos';
+const API_URL = "https://suresback.uc.r.appspot.com/api/productos";
 
 // Obtener todos los productos
 export const getAllProducts = () => axios.get(API_URL);
