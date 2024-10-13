@@ -31,3 +31,54 @@
 
    ```bash
    git clone https://github.com/JesusAnayaMtz/suresadminfront.git
+
+2. Instala las dependencias
+   npm install
+
+3. Configura las variables de entorno en un archivo .env para conectar con la API del backend.
+   
+4. Inicia la aplicación en modo de desarrollo:
+   npm start
+   La aplicación estará disponible en http://localhost:3000.
+
+## Uso
+   Una vez iniciada la aplicación, podrás interactuar con las siguientes funcionalidades:
+
+   Gestión de Productos: Accede al listado de productos, edítalos o agrégalos directamente desde el formulario.
+   Gestión de Clientes: Busca clientes, agrégalos o actualiza su información.
+   Cotizaciones: Crea cotizaciones para clientes, elige productos, aplica descuentos y visualiza el total calculado con IVA.
+   Notificaciones en el Navbar: Revisa alertas de inventario bajo y límites de crédito de clientes.
+
+## Estructura de Proyecto
+   ├── src/
+│   ├── components/       # Componentes reutilizables del frontend
+│   ├── services/         # Servicios para consumir la API del backend
+│   ├── views/            # Vistas principales (Clientes, Productos, Cotizaciones)
+│   ├── App.js            # Configuración principal de la aplicación
+│   └── index.js          # Punto de entrada de la aplicación
+└── public/               # Archivos estáticos
+
+## Endpoints del API
+   A continuación, algunos de los principales endpoints que utiliza la aplicación:
+
+   /productos: Para gestionar productos (crear, editar, eliminar).
+   /clientes: Para gestionar clientes.
+   /cotizaciones: Para crear y gestionar cotizaciones.
+   /notificaciones: Para recuperar notificaciones de inventario y crédito.
+
+   Nota: Para más detalles sobre los endpoints y cómo se consumen, consulta la documentación del backend: SuresAdmin Backend.
+
+## Contribucion
+   Las contribuciones son bienvenidas. Si deseas mejorar alguna funcionalidad o reportar un problema, por favor sigue estos pasos:
+
+   Realiza un fork del proyecto.
+   Crea una nueva rama (git checkout -b feature/nueva-funcionalidad).
+   Realiza tus cambios y commitea (git commit -am 'Agrega nueva funcionalidad').
+   Sube tus cambios (git push origin feature/nueva-funcionalidad).
+   Crea un Pull Request.
+
+## Licencia
+   Este proyecto está bajo la licencia MIT. Consulta el archivo LICENSE para más información.
+
+
+
