@@ -8,6 +8,7 @@ import {
 } from "react-icons/bs";
 import { AiOutlineFileText } from "react-icons/ai";
 import { SlSocialDropbox } from "react-icons/sl";
+import { GrUserManager } from "react-icons/gr";
 import "./Sidebar.css";
 
 const Sidebar = () => {
@@ -66,17 +67,19 @@ const Sidebar = () => {
       name: "productos",
       title: "Productos",
       icon: <SlSocialDropbox className="icon" />,
-      items: [
-        { href: "/productos", title: "Catálogo" },
-      ],
+      items: [{ href: "/productos", title: "Catálogo" }],
     },
     {
       name: "cotizaciones",
       title: "Cotizaciones",
       icon: <AiOutlineFileText className="icon" />,
-      items: [
-        { href: "/cotizaciones", title: "Lista de Cotizaciones" },
-      ],
+      items: [{ href: "/cotizaciones", title: "Lista de Cotizaciones" }],
+    },
+    {
+      name: "empleados",
+      title: "Empleados",
+      icon: <GrUserManager className="icon" />,
+      items: [{ href: "/empleados", title: "Lista de Empleados" }],
     },
   ];
 

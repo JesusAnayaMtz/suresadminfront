@@ -55,7 +55,7 @@ const ClientList = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Hubo un error al eliminar el producto",
+        text: "Hubo un error al eliminar el cliente",
         confirmButtonText: "Aceptar",
       });
       console.error("Error deleting client", error);

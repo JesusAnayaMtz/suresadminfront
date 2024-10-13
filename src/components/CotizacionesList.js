@@ -11,7 +11,7 @@ import * as XLSX from "xlsx";
 import { BsEye, BsPencil, BsTrash, BsFileEarmarkPdf } from "react-icons/bs";
 import Swal from "sweetalert2";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import "jspdf-autotable";
 
 const CotizacionesList = () => {
   const [cotizaciones, setCotizaciones] = useState([]);

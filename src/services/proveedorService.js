@@ -1,7 +1,7 @@
 import axios from "axios";
 
-//const API_URL = 'http://localhost:8080/api/proveedores';
-const API_URL = "https://suresback.uc.r.appspot.com/api/proveedores";
+const API_URL = 'http://localhost:8080/api/proveedores';
+//const API_URL = "https://suresback.uc.r.appspot.com/api/proveedores";
 
 
 export const getAllProveedores = () => axios.get(API_URL);
