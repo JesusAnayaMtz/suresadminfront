@@ -68,7 +68,7 @@
 
    Nota: Para más detalles sobre los endpoints y cómo se consumen, consulta la documentación del backend: SuresAdmin Backend.
 
-## Contribucion
+## Contribución
    Las contribuciones son bienvenidas. Si deseas mejorar alguna funcionalidad o reportar un problema, por favor sigue estos pasos:
 
    Realiza un fork del proyecto.
