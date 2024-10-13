@@ -41,7 +41,7 @@
 
 ## 🚀 Demo
 
-¡Próximamente! (Enlace a la demo si está disponible)
+¡Próximamente!
 
 ---
 
