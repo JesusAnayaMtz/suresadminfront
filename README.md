@@ -58,6 +58,7 @@
 │   └── index.js          # Punto de entrada de la aplicación
 └── public/               # Archivos estáticos
 
+
 ## Endpoints del API
    A continuación, algunos de los principales endpoints que utiliza la aplicación:
 
