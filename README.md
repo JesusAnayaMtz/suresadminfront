@@ -133,5 +133,5 @@ Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](./LICENS
 ---
 
 <p align="center">
-  Con ❤️ por <a href="https://github.com/JesusAnayaMtz">Jesus Anaya</a>
+  Creado por  <a href="https://github.com/JesusAnayaMtz">Jesus Anaya</a>
 </p>
