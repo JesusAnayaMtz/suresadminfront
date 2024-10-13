@@ -77,7 +77,6 @@ Sigue estos pasos para ejecutar el proyecto localmente:
 
 ### Funcionalidades principales:
 
-- **Inicio de Sesión**: Accede con tus credenciales para gestionar el sistema.
 - **Productos**: Administra el catálogo de productos con opciones de edición, eliminación y carga de imágenes.
 - **Clientes**: Gestiona los clientes con opciones de búsqueda y edición rápida.
 - **Cotizaciones**: Crea cotizaciones dinámicas con múltiples productos y descuentos automáticos.
