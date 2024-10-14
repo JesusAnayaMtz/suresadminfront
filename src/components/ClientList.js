@@ -131,7 +131,7 @@ const ClientList = () => {
           </div>
         </div>
       </div>
-      <Table striped bordered hover>
+      <Table size="sm" responsive striped bordered hover>
         <thead>
           <tr>
             <th>Nombre/Razon Social</th>
@@ -150,24 +150,27 @@ const ClientList = () => {
               <td>{client.telefono}</td>
               <td>
                 <Button
-                  variant="primary"
+                  size="sm"
+                  variant="outline-primary"
                   onClick={() => handleViewDetails(client)}
                   className="me-2"
                 >
-                  <BsEye size={24} color="black" />
+                  <BsEye size={20} />
                 </Button>{" "}
                 <Button
-                  variant="warning"
+                  size="sm"
+                  variant="outline-info"
                   onClick={() => handleEdit(client)}
                   className="me-2"
                 >
-                  <BsPencil size={24} />
+                  <BsPencil size={20} />
                 </Button>{" "}
                 <Button
-                  variant="danger"
+                  size="sm"
+                  variant="outline-danger"
                   onClick={() => handleDelete(client.id)}
                 >
-                  <BsTrash size={24} color="black" />
+                  <BsTrash size={20}/>
                 </Button>
               </td>
             </tr>

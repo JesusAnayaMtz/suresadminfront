@@ -171,7 +171,8 @@ const CotizacionesList = () => {
           </div>
         </div>
       </div>
-      <Table striped bordered hover>
+      <div>
+      <Table size="sm" responsive striped bordered hover>
         <thead>
           <tr>
             <th>Cliente</th>
@@ -192,38 +193,42 @@ const CotizacionesList = () => {
               <td>{cotizacion.total}</td>
               <td>
                 <Button
-                  variant="primary"
+                  size="sm"
+                  variant="outline-primary"
                   onClick={() => handleViewDetails(cotizacion)}
                   className="me-2"
                 >
-                  <BsEye size={24} color="black" />
+                  <BsEye size={20} />
                 </Button>
                 <Button
-                  variant="warning"
+                  size="sm"
+                  variant="outline-info"
                   onClick={() => handleEditCotizacion(cotizacion)}
                   className="me-2"
                 >
-                  <BsPencil size={24} color="black" />
+                  <BsPencil size={20}  />
                 </Button>
                 <Button
-                  variant="danger"
+                  size="sm"
+                  variant="outline-danger"
                   onClick={() => handleDeleteCotizacion(cotizacion.id)}
                   className="me-2"
                 >
-                  <BsTrash size={24} color="black" />
+                  <BsTrash size={20} />
                 </Button>
                 <Button
-                  variant="info"
+                  size="sm"
+                  variant="outline-success"
                   onClick={() => exportCotizacionToPDF(cotizacion)}
                 >
-                  <BsFileEarmarkPdf size={24} color="black" />
+                  <BsFileEarmarkPdf size={20}/>
                 </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
-
+      </div>
       {showDetailsModal && (
         <CotizacionDetailsModal
           show={showDetailsModal}
