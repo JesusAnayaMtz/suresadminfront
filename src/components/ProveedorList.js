@@ -24,7 +24,10 @@ const ProveedorList = () => {
   const fetchProveedores = async () => {
     try {
       const response = await getAllProveedores();
-      setProveedores(response.data);
+      const sortedProveedores = response.data.sort((a, b) =>
+        a.nombre.localeCompare(b.nombre)
+      );
+      setProveedores(sortedProveedores);
     } catch (error) {
       console.error("Error fetching proveedores", error);
     }
@@ -88,11 +91,13 @@ const ProveedorList = () => {
     setShowDetailsModal(true);
   };
 
-  const filteredProveedores = proveedores.filter(
-    (proveedor) =>
-      proveedor.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      proveedor.rfc.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProveedores = proveedores
+    .filter(
+      (proveedor) =>
+        proveedor.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        proveedor.rfc.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
 
   // Función para exportar a Excel
   const exportToExcel = () => {

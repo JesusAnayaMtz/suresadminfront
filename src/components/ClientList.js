@@ -23,7 +23,10 @@ const ClientList = () => {
   const fetchClients = async () => {
     try {
       const response = await getAllClients();
-      setClients(response.data);
+      const sortedClients = response.data.sort((a, b) =>
+        a.nombre.localeCompare(b.nombre)
+      );
+      setClients(sortedClients);
     } catch (error) {
       console.error("Error fetching clients", error);
     }
@@ -86,11 +89,13 @@ const ClientList = () => {
     setShowDetailsModal(true);
   };
 
-  const filteredClients = clients.filter(
-    (client) =>
-      client.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      client.rfc.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredClients = clients
+    .filter(
+      (client) =>
+        client.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        client.rfc.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
 
   // Función para exportar a Excel
   const exportToExcel = () => {

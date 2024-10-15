@@ -23,7 +23,10 @@ const EmpleadoList = () => {
   const fetchEmpleados = async () => {
     try {
       const response = await getAllEmpleadosActivos();
-      setEmpleados(response.data);
+      const sortedEmpleados = response.data.sort((a, b) =>
+        a.nombre.localeCompare(b.nombre)
+      );
+      setEmpleados(sortedEmpleados);
     } catch (error) {
       console.error("Error fetching empleados", error);
     }
@@ -77,13 +80,15 @@ const EmpleadoList = () => {
     setShowDetailsModal(true);
   };
 
-  const filteredEmpleados = empleados.filter(
-    (empleado) =>
-      empleado.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      empleado.rfc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      empleado.numeroEmpleado.includes(searchTerm) ||
-      empleado.apellido.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEmpleados = empleados
+    .filter(
+      (empleado) =>
+        empleado.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        empleado.rfc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        empleado.numeroEmpleado.includes(searchTerm) ||
+        empleado.apellido.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
 
   // Función para exportar a Excel
   const exportToExcel = () => {

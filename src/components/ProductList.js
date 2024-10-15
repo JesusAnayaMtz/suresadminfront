@@ -20,10 +20,25 @@ const ProductList = () => {
     fetchProducts();
   }, []);
 
+   // Función para ordenar productos por clave interna
+  const sortProductsByClaveInterna = (a, b) => {
+    const [aPart1, aPart2] = a.claveInterna.split("-").map(Number);
+    const [bPart1, bPart2] = b.claveInterna.split("-").map(Number);
+
+    // Compara la primera parte (antes del guion)
+    if (aPart1 !== bPart1) {
+      return aPart1 - bPart1;
+    }
+
+    // Si la primera parte es igual, compara la segunda parte (después del guion)
+    return aPart2 - bPart2;
+  };
+
   const fetchProducts = async () => {
     try {
       const response = await getAllProductsActivos();
-      setProducts(response.data);
+      const sortedProducts = response.data.sort(sortProductsByClaveInterna);
+      setProducts(sortedProducts);
     } catch (error) {
       console.error("Error fetching products", error);
     }
@@ -86,12 +101,14 @@ const ProductList = () => {
     setShowDetailsModal(true);
   };
 
-  const filteredProducts = products.filter(
-    (product) =>
-      product.claveInterna.includes(searchTerm) ||
-      product.codigoBarras.includes(searchTerm) ||
-      product.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products
+    .filter(
+      (product) =>
+        product.claveInterna.includes(searchTerm) ||
+        product.codigoBarras.includes(searchTerm) ||
+        product.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort(sortProductsByClaveInterna);
 
   // Función para exportar a Excel
   const exportToExcel = () => {
