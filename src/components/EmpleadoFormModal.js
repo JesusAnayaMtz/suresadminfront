@@ -334,6 +334,9 @@ const EmpleadoFormModal = ({ show, onHide, empleado, onEmpleadoSaved }) => {
           <Button variant="primary" type="submit">
             {empleado ? "Guardar Cambios" : "Crear Empleado"}
           </Button>
+          <Button variant="danger mx-3" onClick={onHide}>
+            Cancelar
+          </Button>
         </Form>
       </Modal.Body>
     </Modal>

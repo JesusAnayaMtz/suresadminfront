@@ -166,7 +166,7 @@ const ProductList = () => {
               <td>{product.claveInterna}</td>
               <td>{product.descripcion}</td>
               <td>{product.codigoBarras}</td>
-              <td>{product.precio}</td>
+              <td>${product.precio}</td>
               <td>{product.existencia}</td>
               <td>
                 <Button

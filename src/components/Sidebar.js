@@ -51,7 +51,7 @@ const Sidebar = () => {
       icon: <BsPeople className="icon" />,
       items: [
         { href: "/clientes", title: "Lista de Clientes" },
-        { href: "/clientes/reportes", title: "Reportes" },
+        { href: "/clientes/cuentascobrar", title: "Cuentas Por Cobrar" },
       ],
     },
     {

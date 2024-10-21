@@ -43,20 +43,10 @@ const ProductDetailsModal = ({ show, onHide, product }) => {
                 readOnly
               />
             </Form.Group>
-            <Form.Group as={Col} sm={2} controlId="costo">
-              <Form.Label>Costo</Form.Label>
-              <Form.Control type="number" value={product.costo} readOnly />
-            </Form.Group>
             <Form.Group as={Col} sm={2} controlId="precio">
               <Form.Label>Precio</Form.Label>
               <Form.Control type="number" value={product.precio} readOnly />
             </Form.Group>
-            <Form.Group as={Col} sm={2} controlId="utilidad">
-              <Form.Label>Utilidad</Form.Label>
-              <Form.Control type="number" value={product.utilidad} readOnly />
-            </Form.Group>
-          </Row>
-          <Row className="mb-3">
             <Form.Group as={Col} sm={3} controlId="categoria">
               <Form.Label>Categoría</Form.Label>
               <Form.Control
@@ -66,6 +56,8 @@ const ProductDetailsModal = ({ show, onHide, product }) => {
                 readOnly
               />
             </Form.Group>
+          </Row>
+          <Row className="mb-3">
             <Form.Group as={Col} sm={2} controlId="existencia">
               <Form.Label>Existencia</Form.Label>
               <Form.Control type="number" value={product.existencia} readOnly />
@@ -91,7 +83,7 @@ const ProductDetailsModal = ({ show, onHide, product }) => {
               <Image
                 alt="rutaImagen"
                 src={imageUrl}
-                style={{ maxWidth: "50%", maxHeight: "200px" }}
+                style={{ maxWidth: "50%", maxHeight: "100px" }}
               />
             </Form.Group>
           </Row>

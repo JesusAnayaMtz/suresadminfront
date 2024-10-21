@@ -110,8 +110,8 @@ const ClientList = () => {
       <h2 className="text-center">Gestión de Clientes</h2>
       <div>
         <div className="row">
-          <div className="col-md-1 mb-3">
-            <p className="mt-2 text-center">Buscar</p>
+          <div className="col-md-1 mb-2">
+            <p className="mt-2 text-center fs-5">Buscar</p>
           </div>
           <div className="col-md-7">
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />

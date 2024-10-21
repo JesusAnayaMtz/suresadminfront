@@ -160,21 +160,28 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
   return (
     <Modal show={show} onHide={onHide} size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>{initialData ? "Editar Cotización" : "Crear Cotización"}</Modal.Title>
+        <Modal.Title>
+          {initialData ? "Editar Cotización" : "Crear Cotización"}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
           <Form.Group as={Row} controlId="cliente" className="mb-3">
-            <Form.Label column sm={3}>Cliente</Form.Label>
+            <Form.Label column sm={3}>
+              Cliente
+            </Form.Label>
             <Col sm={9}>
               <Form.Control
                 as="select"
                 value={selectedCliente || ""}
                 onChange={(e) => setSelectedCliente(e.target.value)}
+                required
               >
                 <option value="">Seleccione un cliente</option>
                 {clientes.map((cliente) => (
-                  <option key={cliente.id} value={cliente.id}>{cliente.nombre}</option>
+                  <option key={cliente.id} value={cliente.id}>
+                    {cliente.nombre}{" "}
+                  </option>
                 ))}
               </Form.Control>
             </Col>
@@ -187,11 +194,16 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
                 <Form.Control
                   as="select"
                   value={producto.productoId || ""}
-                  onChange={(e) => handleProductoChange(index, "productoId", e.target.value)}
+                  onChange={(e) =>
+                    handleProductoChange(index, "productoId", e.target.value)
+                  }
+                  required
                 >
                   <option value="">Seleccione un producto</option>
                   {productos.map((producto) => (
-                    <option key={producto.id} value={producto.id}>{producto.descripcion}</option>
+                    <option key={producto.id} value={producto.id}>
+                      {producto.descripcion}
+                    </option>
                   ))}
                 </Form.Control>
               </Form.Group>
@@ -200,7 +212,10 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
                 <Form.Control
                   type="number"
                   value={producto.cantidad || ""}
-                  onChange={(e) => handleProductoChange(index, "cantidad", e.target.value)}
+                  onChange={(e) =>
+                    handleProductoChange(index, "cantidad", e.target.value)
+                  }
+                  required
                 />
               </Form.Group>
               <Form.Group as={Col} controlId={`descuento-${index}`}>
@@ -208,21 +223,32 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
                 <Form.Control
                   type="number"
                   value={producto.descuento || ""}
-                  onChange={(e) => handleProductoChange(index, "descuento", e.target.value)}
+                  onChange={(e) =>
+                    handleProductoChange(index, "descuento", e.target.value)
+                  }
                 />
               </Form.Group>
               <Col sm={2} className="d-flex align-items-end">
-                <Button variant="danger" onClick={() => handleRemoveProducto(index)}>
+                <Button
+                  variant="danger"
+                  onClick={() => handleRemoveProducto(index)}
+                >
                   Eliminar
                 </Button>
               </Col>
             </Row>
           ))}
-          <Button variant="secondary" onClick={handleAddProducto} className="mb-3">
+          <Button
+            variant="secondary"
+            onClick={handleAddProducto}
+            className="mb-3"
+          >
             Agregar Producto
           </Button>
           <Form.Group as={Row} controlId="descuentoAdicional" className="mb-3">
-            <Form.Label column sm={3}>Descuento Adicional (%)</Form.Label>
+            <Form.Label column sm={3}>
+              Descuento Adicional (%)
+            </Form.Label>
             <Col sm={9}>
               <Form.Control
                 type="number"
@@ -234,8 +260,12 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>Cancelar</Button>
-        <Button variant="primary" onClick={handleSave} disabled={!isModified}>Guardar</Button>
+        <Button variant="danger" onClick={onHide}>
+          Cancelar
+        </Button>
+        <Button variant="primary" onClick={handleSave} disabled={!isModified}>
+          Guardar
+        </Button>
       </Modal.Footer>
     </Modal>
   );

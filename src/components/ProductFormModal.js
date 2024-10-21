@@ -10,7 +10,6 @@ const ProductFormModal = ({ show, onHide, product, onProductSaved }) => {
     codigoBarras: "",
     claveSat: "",
     tipoIva: "",
-    costo: 0,
     precio: 0,
     categoria: "",
     existencia: 0,
@@ -30,7 +29,6 @@ const ProductFormModal = ({ show, onHide, product, onProductSaved }) => {
         codigoBarras: "",
         claveSat: "",
         tipoIva: "",
-        costo: 0,
         precio: 0,
         categoria: "",
         existencia: 0,
@@ -86,6 +84,7 @@ const handleSubmit = async (e) => {
   }
 }
 };
+
 
   return (
     <Modal show={show} onHide={onHide} size="xl">
@@ -153,16 +152,6 @@ const handleSubmit = async (e) => {
                 <option value="GRAVADO">Gravado</option>
                 <option value="EXENTO">exento</option>
               </Form.Select>
-            </Form.Group>
-            <Form.Group as={Col} sm={2} controlId="costo">
-              <Form.Label>Costo</Form.Label>
-              <Form.Control
-                type="text"
-                name="costo"
-                value={formData.costo}
-                onChange={handleChange}
-                required
-              />
             </Form.Group>
             <Form.Group as={Col} sm={2} controlId="precio">
               <Form.Label>Precio</Form.Label>
@@ -244,6 +233,9 @@ const handleSubmit = async (e) => {
           </Row>
           <Button variant="primary" type="submit">
             {product ? "Guardar Cambios" : "Crear Producto"}
+          </Button>
+          <Button variant="danger mx-3" onClick={onHide}>
+            Cancelar
           </Button>
         </Form>
       </Modal.Body>
