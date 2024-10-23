@@ -1,0 +1,46 @@
+.modal-header-custom {
+    background-color: #0f5eb4;
+    /* Azul para el encabezado */
+    color: white;
+    /* Texto blanco */
+    padding: 20px;
+    /* Espaciado */
+    border-bottom: 1px solid #eef1f4;
+}
+
+.modal-body-custom {
+    padding: 30px;
+    background-color: #eef1f4;
+    /* Fondo gris claro para el cuerpo */
+}
+
+.form-label-custom {
+    font-weight: bold;
+    /* Etiquetas más visibles */
+    color: #495057;
+    /* Color gris oscuro para las etiquetas */
+}
+
+.form-control-custom {
+    border: 1px solid #ced4da;
+    /* Borde gris claro */
+    padding: 10px;
+    border-radius: 4px;
+    /* Bordes redondeados */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* Sombra ligera */
+    background-color: #eef1f4;
+    /* Fondo blanco */
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.form-control-custom:focus {
+    border-color: #007bff;
+    /* Borde azul al hacer focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    /* Sombra más intensa al hacer focus */
+}
+
+button {
+    padding: 10px 20px;
+}
