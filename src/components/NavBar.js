@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Navbar, Nav, NavDropdown, Badge } from "react-bootstrap";
 import { getAllProductsActivos } from "../services/ProductoService";
 import { Bell } from "lucide-react";
 
@@ -54,15 +53,6 @@ const NavBar = () => {
       <div className="container-fluid">
         <img src="./logosures.png" style={{width:"170px"}} className="navbar-brand" href="#">
         </img>
-
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarContent"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
 
         <div className="collapse navbar-collapse" id="navbarContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">

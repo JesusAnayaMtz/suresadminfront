@@ -92,7 +92,7 @@ const ClientFormModal = ({ show, onHide, client, onClientSaved }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} size="xl" centered>
+    <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header closeButton className="bg-light">
         <Modal.Title>{client ? "Editar Cliente" : "Crear Cliente"}</Modal.Title>
       </Modal.Header>
@@ -103,7 +103,12 @@ const ClientFormModal = ({ show, onHide, client, onClientSaved }) => {
             <Card.Header>Información General</Card.Header>
             <Card.Body>
               <Row className="mb-3">
-                <Form.Group as={Col} sm={3} controlId="tipoPersona" className="mt-3">
+                <Form.Group
+                  as={Col}
+                  sm={4}
+                  controlId="tipoPersona"
+                  className="mt-3"
+                >
                   <Form.Label>Tipo Persona</Form.Label>
                   <Form.Select
                     name="tipoPersona"
@@ -116,7 +121,7 @@ const ClientFormModal = ({ show, onHide, client, onClientSaved }) => {
                     <option value="PERSONA_MORAL">Persona Moral</option>
                   </Form.Select>
                 </Form.Group>
-                <Form.Group as={Col} controlId="nombre" className="mt-3">
+                <Form.Group as={Col} sm={8} controlId="nombre" className="mt-3">
                   <Form.Label>
                     <FaUser /> Nombre/Razón Social
                   </Form.Label>
@@ -128,6 +133,8 @@ const ClientFormModal = ({ show, onHide, client, onClientSaved }) => {
                     required
                   />
                 </Form.Group>
+              </Row>
+              <Row className="mb-3">
                 <Form.Group as={Col} sm={3} controlId="rfc" className="mt-3">
                   <Form.Label>RFC</Form.Label>
                   <Form.Control
@@ -137,6 +144,25 @@ const ClientFormModal = ({ show, onHide, client, onClientSaved }) => {
                     onChange={handleChange}
                     required
                   />
+                </Form.Group>
+                <Form.Group as={Col} controlId="regimenFiscal" className="mt-3">
+                  <Form.Label>Regimen Fiscal</Form.Label>
+                  <Form.Select
+                    aria-label="Default select example"
+                    type="text"
+                    name="regimenFiscal"
+                    value={formData.regimenFiscal}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option>Seleccione una opcion</option>
+                    <option value="REGIMEN_SIMPLIFICADO_DE_CONFIANZA">
+                      Regimen Simplificado De Confianza
+                    </option>
+                    <option value="GENERAL_LEY_PERSONAS_MORALES">
+                      Generla Ley Personas Morales
+                    </option>
+                  </Form.Select>
                 </Form.Group>
               </Row>
             </Card.Body>
@@ -204,7 +230,7 @@ const ClientFormModal = ({ show, onHide, client, onClientSaved }) => {
             <Card.Header>Dirección</Card.Header>
             <Card.Body>
               <Row className="mb-3">
-                <Form.Group as={Col} controlId="direccion" className="mt-3">
+                <Form.Group as={Col} sm={8} controlId="direccion" className="mt-3">
                   <Form.Label>Dirección</Form.Label>
                   <Form.Control
                     type="text"
@@ -224,7 +250,9 @@ const ClientFormModal = ({ show, onHide, client, onClientSaved }) => {
                     required
                   />
                 </Form.Group>
-                <Form.Group as={Col} controlId="ciudad" className="mt-3">
+              </Row>
+              <Row>
+                <Form.Group as={Col} sm={4} controlId="ciudad" className="mt-3">
                   <Form.Label>Ciudad</Form.Label>
                   <Form.Control
                     type="text"
@@ -233,6 +261,63 @@ const ClientFormModal = ({ show, onHide, client, onClientSaved }) => {
                     onChange={handleChange}
                     required
                   />
+                </Form.Group>
+                <Form.Group as={Col} sm={3} controlId="codigoPostal" className="mt-3">
+                  <Form.Label>Codigo Postal</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="codigoPostal"
+                    value={formData.codigoPostal}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group as={Col} controlId="estado" className="mt-3">
+                  <Form.Label>Estado</Form.Label>
+                  <Form.Select
+                    aria-label="Default select example"
+                    type="text"
+                    name="estado"
+                    value={formData.estado}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option>Seleccione una opcion</option>
+                    <option value="AGUASCALIENTES">Aguascalientes</option>
+                    <option value="BAJA_CALIFORNIA">Baja California</option>
+                    <option value="BAJA_CALIFORNIA_SUR">
+                      Baja California Sur
+                    </option>
+                    <option value="CAMPECHE">Campeche</option>
+                    <option value="CHIAPAS">Chiapas</option>
+                    <option value="CHIHUAHUA">Chihuahua</option>
+                    <option value="COAHUILA">Coahuila</option>
+                    <option value="COLIMA">Colima</option>
+                    <option value="CDMX">Cdmx</option>
+                    <option value="DURANGO">Durango</option>
+                    <option value="GUANAJUATO">Guanajuato</option>
+                    <option value="GUERRERO">Guerrero</option>
+                    <option value="HIDALGO">Hidalgo</option>
+                    <option value="JALISCO">Jalisco</option>
+                    <option value="MEXICO">Mexico</option>
+                    <option value="MICHOACAN">Michoacan</option>
+                    <option value="MORELOS">Morelos</option>
+                    <option value="NAYARIT">Nayarit</option>
+                    <option value="NUEVO_LEON">Nuevo Leon</option>
+                    <option value="OAXACA">Oaxaca</option>
+                    <option value="PUEBLA">Puebla</option>
+                    <option value="QUERETARO">Queretaro</option>
+                    <option value="QUINTANA_ROO">Quintana Roo</option>
+                    <option value="SAN_LUIS_POTOSI">San Luis Potosi</option>
+                    <option value="SINALOA">Sinaloa</option>
+                    <option value="SONORA">Sonora</option>
+                    <option value="TABASCO">Tabasco</option>
+                    <option value="TAMAULIPAS">Tamaulipas</option>
+                    <option value="TLAXCALA">Tlaxcala</option>
+                    <option value="VERACRUZ">Veracruz</option>
+                    <option value="YUCATAN">Yucatan</option>
+                    <option value="ZACATECAS">Zacatecas</option>
+                  </Form.Select>
                 </Form.Group>
               </Row>
             </Card.Body>

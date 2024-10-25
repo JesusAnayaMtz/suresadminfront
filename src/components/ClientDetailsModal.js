@@ -79,14 +79,36 @@ const ClientDetailsModal = ({ show, onHide, client }) => {
                 readOnly
               />
             </Form.Group>
+            <Form.Group as={Col} controlId="email">
+              <Form.Label className="form-label-custom">
+                Email Alterno
+              </Form.Label>
+              <Form.Control
+                type="email"
+                className="form-control-custom"
+                value={client.emailAlterno}
+                readOnly
+              />
+            </Form.Group>
           </Row>
           <Row className="mb-4">
-            <Form.Group as={Col} controlId="telefono">
+            <Form.Group as={Col} sm={3} controlId="telefono">
               <Form.Label className="form-label-custom">Teléfono</Form.Label>
               <Form.Control
                 type="number"
                 className="form-control-custom"
                 value={client.telefono}
+                readOnly
+              />
+            </Form.Group>
+            <Form.Group as={Col} sm={3} controlId="telefono">
+              <Form.Label className="form-label-custom">
+                Teléfono Alterno
+              </Form.Label>
+              <Form.Control
+                type="number"
+                className="form-control-custom"
+                value={client.telefonoAlterno}
                 readOnly
               />
             </Form.Group>
@@ -99,6 +121,8 @@ const ClientDetailsModal = ({ show, onHide, client }) => {
                 readOnly
               />
             </Form.Group>
+          </Row>
+          <Row className="mb-4">
             <Form.Group as={Col} controlId="colonia">
               <Form.Label className="form-label-custom">Colonia</Form.Label>
               <Form.Control
@@ -108,8 +132,6 @@ const ClientDetailsModal = ({ show, onHide, client }) => {
                 readOnly
               />
             </Form.Group>
-          </Row>
-          <Row className="mb-4">
             <Form.Group as={Col} controlId="estado">
               <Form.Label className="form-label-custom">Estado</Form.Label>
               <Form.Control
@@ -129,6 +151,45 @@ const ClientDetailsModal = ({ show, onHide, client }) => {
                 readOnly
               />
             </Form.Group>
+          </Row>
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="manejoCredito" className="mt-3">
+              <Form.Label className="form-label-custom">
+                Manejo De Credito
+              </Form.Label>
+              <Form.Control
+                type="text"
+                className="form-control-custom"
+                value={client.manejoCredito ? "Si" : "No"}
+                readOnly
+              />
+            </Form.Group>
+            {client.manejoCredito && (
+              <>
+                <Form.Group as={Col} controlId="limiteCredito" className="mt-3">
+                  <Form.Label className="form-label-custom">
+                    Límite de Crédito
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    className="form-control-custom"
+                    value={client.limiteCredito}
+                    readOnly
+                  />
+                </Form.Group>
+                <Form.Group as={Col} controlId="diasCredito" className="mt-3">
+                  <Form.Label className="form-label-custom">
+                    Días de Crédito
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    className="form-control-custom"
+                    value={client.diasCredito}
+                    readOnly
+                  />
+                </Form.Group>
+              </>
+            )}
           </Row>
         </Form>
       </Modal.Body>
