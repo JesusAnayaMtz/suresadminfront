@@ -223,7 +223,7 @@ const CotizacionesList = () => {
       doc.setFont("helvetica", "normal");
       doc.text(`$${Number(cotizacion.subtotal).toFixed(2)}`, 175, finalY + 5);
       doc.text(`$${(cotizacion.subtotal * 0.16).toFixed(2)}`, 175, finalY + 11);
-      doc.text(`$${(cotizacion.subtotal * 1.16).toFixed(2)}`, 175, finalY + 17);
+      doc.text(`$${(cotizacion.total).toFixed(2)}`, 175, finalY + 17);
 
       // Sección de notas con diseño
       const notasY = finalY + 30;

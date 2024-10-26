@@ -16,7 +16,10 @@ const ProductDetailsModal = ({ show, onHide, product }) => {
 
   return (
     <Modal show={show} onHide={onHide} size="xl" centered>
-      <Modal.Header closeButton className="bg-light">
+      <Modal.Header
+        closeButton
+        className="p-3 bg-secondary bg-opacity-10 rounded"
+      >
         <div>
           <Modal.Title className="h4 mb-1">Detalles del Producto</Modal.Title>
           <small className="text-muted">ID: {product.claveInterna}</small>

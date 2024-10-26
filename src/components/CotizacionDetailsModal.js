@@ -64,7 +64,7 @@ const CotizacionDetailsModal = ({ show, onHide, cotizacion }) => {
               </Form.Group>
               <Form.Group as={Col} controlId={`precio-${index}`}>
                 <Form.Label>Precio Unitario</Form.Label>
-                <Form.Control type="number" value={producto.precio} readOnly />
+                <Form.Control type="text" value={`$${producto.precio}`} readOnly />
               </Form.Group>
               <Form.Group as={Col} controlId={`descuento-${index}`}>
                 <Form.Label>Descuento (%)</Form.Label>
@@ -76,7 +76,7 @@ const CotizacionDetailsModal = ({ show, onHide, cotizacion }) => {
               </Form.Group>
               <Form.Group as={Col} controlId={`importe-${index}`}>
                 <Form.Label>Importe</Form.Label>
-                <Form.Control type="number" value={producto.importe} readOnly />
+                <Form.Control type="text" value={`$${producto.importe}`} readOnly />
               </Form.Group>
             </Row>
           ))}
@@ -84,8 +84,8 @@ const CotizacionDetailsModal = ({ show, onHide, cotizacion }) => {
             <Form.Group as={Col} controlId="subtotal">
               <Form.Label>Subtotal</Form.Label>
               <Form.Control
-                type="number"
-                value={cotizacion.subtotal}
+                type="text"
+                value={`$${cotizacion.subtotal}`}
                 readOnly
               />
             </Form.Group>
@@ -99,7 +99,7 @@ const CotizacionDetailsModal = ({ show, onHide, cotizacion }) => {
             </Form.Group>
             <Form.Group as={Col} controlId="total">
               <Form.Label>Total</Form.Label>
-              <Form.Control type="number" value={cotizacion.total} readOnly />
+              <Form.Control type="text" value={`$${cotizacion.total}`} readOnly />
             </Form.Group>
           </Row>
         </Form>

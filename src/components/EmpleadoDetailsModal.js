@@ -1,208 +1,197 @@
 import React from "react";
-import { Modal, Button, Form, Row, Col, Image } from "react-bootstrap";
+import { Modal, Button, Row, Col, Card, Badge } from "react-bootstrap";
 import { getEmpleadoImage } from "../services/EmpleadoService";
 
 const EmpleadoDetailsModal = ({ show, onHide, empleado }) => {
+  if (!empleado) return null;
 
-      if (!empleado) return null;
+  const imageUrl = getEmpleadoImage(empleado.rutaImagen);
 
-      const imageUrl = getEmpleadoImage(empleado.rutaImagen);
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("es-MX", {
+      style: "currency",
+      currency: "MXN",
+    }).format(value);
+  };
 
-      return (
-        <Modal show={show} onHide={onHide} size="xl">
-          <Modal.Header closeButton>
-            <Modal.Title>Detalles Del Empleado</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Row className="mb-3">
-                <Form.Group as={Col} sm={2} controlId="numeroEmpleado">
-                  <Form.Label>Numero De Empleado</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.numeroEmpleado}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={3} controlId="nombre">
-                  <Form.Label>Nombre</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.nombre}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={2} controlId="apellido">
-                  <Form.Label>Apellido Paterno</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.apellido}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={2} controlId="apellidoMaterno">
-                  <Form.Label>Apellido Materno</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.apellidoMaterno}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={3} controlId="curp">
-                  <Form.Label>Curp</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.curp}
-                    readOnly
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group as={Col} sm={2} controlId="rfc">
-                  <Form.Label>Rfc</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.rfc}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={4} controlId="direccion">
-                  <Form.Label>Direccion</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.direccion}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={3} controlId="colonia">
-                  <Form.Label>Colonia</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.colonia}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={3} controlId="ciudad">
-                  <Form.Label>Ciudad</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.ciudad}
-                    readOnly
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group as={Col} sm={3} controlId="email">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.email}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={2} controlId="telefono">
-                  <Form.Label>Telefono</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.telefono}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={2} controlId="celular">
-                  <Form.Label>Celular</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.celular}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={2} controlId="fechaIniLaboral">
-                  <Form.Label>Fecha Inicio Laboral</Form.Label>
-                  <Form.Control
-                    type="date"
-                    value={empleado.fechaIniLaboral}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={3} controlId="nss">
-                  <Form.Label>Numero De Seguro Social</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={empleado.nss}
-                    readOnly
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3">
-                <Form.Group as={Col} sm={3} controlId="departamento">
-                  <Form.Label>Departamento</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.departamento}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={3} controlId="puesto">
-                  <Form.Label>Puesto</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.puesto}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={3} controlId="banco">
-                  <Form.Label>Banco</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={empleado.banco}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={3} controlId="cuentaBancaria">
-                  <Form.Label>Cuenta Bancaria</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={empleado.cuentaBancaria}
-                    readOnly
-                  />
-                </Form.Group>
-              </Row>
-              <Row className="mb-3"></Row>
-              <Row className="mb-3">
-                <Form.Group as={Col} sm={2} controlId="salarioBase">
-                  <Form.Label>Salario Base</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={empleado.salarioBase}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} sm={2} controlId="salarioIntegrado">
-                  <Form.Label>Salario Integrado</Form.Label>
-                  <Form.Control
-                    type="number"
-                    value={empleado.salarioIntegrado}
-                    readOnly
-                  />
-                </Form.Group>
-                <Form.Group as={Col} controlId="rutaImagen">
-                  <Image
-                    alt="rutaImagen"
-                    src={imageUrl}
-                    style={{ maxWidth: "50%", maxHeight: "125px" }}
-                  />
-                </Form.Group>
-              </Row>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={onHide}>
-              Cerrar
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      );
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("es-MX", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
+  return (
+    <Modal show={show} onHide={onHide} size="xl" centered>
+      <Modal.Header
+        closeButton
+        className="p-3 bg-secondary bg-opacity-10 rounded"
+      >
+        <div>
+          <Modal.Title className="h4 mb-1">Detalles del Empleado</Modal.Title>
+          <small className="text-muted">
+            Número de Empleado: {empleado.numeroEmpleado}
+          </small>
+        </div>
+      </Modal.Header>
+
+      <Modal.Body className="p-4">
+        <Row>
+          {/* Columna de imagen */}
+          <Col md={3} className="mb-4 mb-md-0">
+            <Card className="border-0 shadow-sm">
+              <div
+                className="d-flex justify-content-center align-items-center"
+                style={{ height: "250px" }}
+              >
+                <img
+                  src={imageUrl}
+                  alt={`${empleado.nombre} ${empleado.apellido}`}
+                  className="img-fluid"
+                  style={{
+                    maxHeight: "200px",
+                    maxWidth: "100%",
+                    objectFit: "contain",
+                  }}
+                />
+              </div>
+            </Card>
+          </Col>
+
+          {/* Columna de información */}
+          <Col md={9}>
+            {/* Información personal */}
+            <div className="mb-4">
+              <h3 className="h4 mb-3">
+                {empleado.nombre} {empleado.apellido} {empleado.apellidoMaterno}
+              </h3>
+              <div className="mb-2">
+                <Badge bg="primary" className="me-2">
+                  {empleado.departamento}
+                </Badge>
+                <Badge bg="secondary">{empleado.puesto}</Badge>
+              </div>
+            </div>
+
+            <hr className="my-4" />
+
+            {/* Información laboral */}
+            <Row className="mb-4 g-3">
+              <Col sm={6}>
+                <div className="p-3 bg-secondary bg-opacity-10 rounded">
+                  <small className="text-muted d-block mb-1">
+                    Salario Base
+                  </small>
+                  <h4 className="text-success mb-0">
+                    {formatCurrency(empleado.salarioBase)}
+                  </h4>
+                </div>
+              </Col>
+              <Col sm={6}>
+                <div className="p-3 bg-secondary bg-opacity-10 rounded">
+                  <small className="text-muted d-block mb-1">
+                    Fecha Inicio Laboral
+                  </small>
+                  <h5 className="mb-0">
+                    {formatDate(empleado.fechaIniLaboral)}
+                  </h5>
+                </div>
+              </Col>
+            </Row>
+
+            {/* Información personal y contacto */}
+            <Card className="border-0 bg-secondary bg-opacity-10 mb-4">
+              <Card.Body>
+                <h5 className="mb-3">Información Personal</h5>
+                <Row className="g-3">
+                  <Col sm={4}>
+                    <small className="text-muted d-block">CURP</small>
+                    <span>{empleado.curp.toUpperCase()}</span>
+                  </Col>
+                  <Col sm={4}>
+                    <small className="text-muted d-block">RFC</small>
+                    <span>{empleado.rfc.toUpperCase()}</span>
+                  </Col>
+                  <Col sm={4}>
+                    <small className="text-muted d-block">NSS</small>
+                    <span>{empleado.nss}</span>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+
+            {/* Contacto */}
+            <Card className="border-0 bg-secondary bg-opacity-10 mb-4">
+              <Card.Body>
+                <h5 className="mb-3">Contacto</h5>
+                <Row className="g-3">
+                  <Col sm={4}>
+                    <small className="text-muted d-block">Email</small>
+                    <span>{empleado.email}</span>
+                  </Col>
+                  <Col sm={4}>
+                    <small className="text-muted d-block">Teléfono</small>
+                    <span>{empleado.telefono}</span>
+                  </Col>
+                  <Col sm={4}>
+                    <small className="text-muted d-block">Celular</small>
+                    <span>{empleado.celular}</span>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+
+            {/* Dirección */}
+            <Card className="border-0 bg-secondary bg-opacity-10 mb-4">
+              <Card.Body>
+                <h5 className="mb-3">Dirección</h5>
+                <Row className="g-3">
+                  <Col sm={6}>
+                    <small className="text-muted d-block">Calle</small>
+                    <span>{empleado.direccion}</span>
+                  </Col>
+                  <Col sm={3}>
+                    <small className="text-muted d-block">Colonia</small>
+                    <span>{empleado.colonia}</span>
+                  </Col>
+                  <Col sm={3}>
+                    <small className="text-muted d-block">Ciudad</small>
+                    <span>{empleado.ciudad}</span>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+
+            {/* Información bancaria */}
+            <Card className="border-0 bg-secondary bg-opacity-10">
+              <Card.Body>
+                <h5 className="mb-3">Información Bancaria</h5>
+                <Row className="g-3">
+                  <Col sm={6}>
+                    <small className="text-muted d-block">Banco</small>
+                    <span>{empleado.banco}</span>
+                  </Col>
+                  <Col sm={6}>
+                    <small className="text-muted d-block">
+                      Cuenta Bancaria
+                    </small>
+                    <span>{empleado.cuentaBancaria}</span>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Modal.Body>
+
+      <Modal.Footer className="bg-light">
+        <Button variant="outline-secondary" onClick={onHide}>
+          Cerrar
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
 };
 
 export default EmpleadoDetailsModal;

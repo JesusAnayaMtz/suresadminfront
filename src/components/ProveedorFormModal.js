@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { createProveedor, updateProveedor } from "../services/proveedorService";
-import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import { Modal, Button, Form, Row, Col, Card } from "react-bootstrap";
+import { FaUser, FaEnvelope, FaPhone } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const ProveedorFormModal = ({ show, onHide, proveedor, onProveedorSaved }) => {
   const [formData, setFormData] = useState({
-    tipoPersona: '',
-    nombre: '',
-    rfc: '',
-    regimenFiscal: '',
-    codigoPostal: '',
-    email: '',
-    emailAlterno: '',
-    telefono: '',
-    telefonoAlterno: '',
-    direccion: '',
-    colonia: '',
-    ciudad: '',
-    estado: '',
+    tipoPersona: "",
+    nombre: "",
+    rfc: "",
+    regimenFiscal: "",
+    codigoPostal: "",
+    email: "",
+    emailAlterno: "",
+    telefono: "",
+    telefonoAlterno: "",
+    direccion: "",
+    colonia: "",
+    ciudad: "",
+    estado: "",
   });
 
   useEffect(() => {
@@ -58,24 +59,24 @@ const ProveedorFormModal = ({ show, onHide, proveedor, onProveedorSaved }) => {
         Swal.fire({
           icon: "success",
           title: "Proveedor Actualizado",
-          text: "El proveedor se actualizo correctamente",
+          text: "El proveedor se actualizó correctamente",
         });
       } else {
         await createProveedor(formData);
         Swal.fire({
           icon: "success",
           title: "Proveedor Creado",
-          text: "El proveedor se ah creado correctamente",
-        })
+          text: "El proveedor se ha creado correctamente",
+        });
       }
       onProveedorSaved();
       onHide();
     } catch (error) {
-      if(error.response && error.response.data){
+      if (error.response && error.response.data) {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "El existe un proveedor con ese rfc",
+          text: "Ya existe un proveedor con ese RFC",
           confirmButtonText: "Aceptar",
         });
       } else {
@@ -85,207 +86,253 @@ const ProveedorFormModal = ({ show, onHide, proveedor, onProveedorSaved }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} size="xl">
-      <Modal.Header closeButton>
+    <Modal show={show} onHide={onHide} size="lg" centered>
+      <Modal.Header closeButton className="bg-light">
         <Modal.Title>
           {proveedor ? "Editar Proveedor" : "Crear Proveedor"}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="bg-light">
         <Form onSubmit={handleSubmit}>
-          <Row className="mb-3">
-            <Form.Group as={Col} controlId="tipoPersona" className="mt-3">
-              <Form.Label>Tipo Persona</Form.Label>
-              <Form.Select
-                aria-label="Default select example"
-                type="text"
-                name="tipoPersona"
-                value={formData.tipoPersona}
-                onChange={handleChange}
-                required
-              >
-                <option>Seleccione una opcion</option>
-                <option value="PERSONA_FISICA">Persona Fisica</option>
-                <option value="PERSONA_MORAL">Persona Moral</option>
-              </Form.Select>
-            </Form.Group>
-            <Form.Group as={Col} controlId="nombre" className="mt-3">
-              <Form.Label>Nombre/Razon Social</Form.Label>
-              <Form.Control
-                type="text"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group as={Col} controlId="rfc" className="mt-3">
-              <Form.Label>RFC</Form.Label>
-              <Form.Control
-                type="text"
-                name="rfc"
-                value={formData.rfc}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Row>
-          <Row className="mb-3">
-            <Form.Group as={Col} controlId="regimenFiscal" className="mt-3">
-              <Form.Label>Tipo Persona</Form.Label>
-              <Form.Select
-                aria-label="Default select example"
-                type="text"
-                name="regimenFiscal"
-                value={formData.regimenFiscal}
-                onChange={handleChange}
-                required
-              >
-                <option>Seleccione una opcion</option>
-                <option value="REGIMEN_SIMPLIFICADO_DE_CONFIANZA">
-                  Regimen Simplificado De Confianza
-                </option>
-                <option value="GENERAL_LEY_PERSONAS_MORALES">
-                  Generla Ley Personas Morales
-                </option>
-              </Form.Select>
-            </Form.Group>
-            <Form.Group as={Col} controlId="codigoPostal" className="mt-3">
-              <Form.Label>Codigo Postal</Form.Label>
-              <Form.Control
-                type="text"
-                name="codigoPostal"
-                value={formData.codigoPostal}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group as={Col} controlId="email" className="mt-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Row>
-          <Row className="mb-3">
-            <Form.Group as={Col} controlId="emailAlterno" className="mt-3">
-              <Form.Label>Email Alterno</Form.Label>
-              <Form.Control
-                type="email"
-                name="emailAlterno"
-                value={formData.emailAlterno}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group as={Col} controlId="telefono" className="mt-3">
-              <Form.Label>Telefono</Form.Label>
-              <Form.Control
-                type="text"
-                name="telefono"
-                value={formData.telefono}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group as={Col} controlId="telefonoAlterno" className="mt-3">
-              <Form.Label>Telefono Alterno</Form.Label>
-              <Form.Control
-                type="text"
-                name="telefonoAlterno"
-                value={formData.telefonoAlterno}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-          </Row>
-          <Form.Group as={Col} controlId="direccion" className="mt-3">
-            <Form.Label>Direccion</Form.Label>
-            <Form.Control
-              type="text"
-              name="direccion"
-              value={formData.direccion}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Row className="mb-3">
-            <Form.Group as={Col} controlId="colonia" className="mt-3">
-              <Form.Label>Colonia</Form.Label>
-              <Form.Control
-                type="text"
-                name="colonia"
-                value={formData.colonia}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group as={Col} controlId="ciudad" className="mt-3">
-              <Form.Label>Ciudad</Form.Label>
-              <Form.Control
-                type="text"
-                name="ciudad"
-                value={formData.ciudad}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group as={Col} controlId="estado" className="mt-3">
-              <Form.Label>Estado</Form.Label>
-              <Form.Select
-                aria-label="Default select example"
-                type="text"
-                name="estado"
-                value={formData.estado}
-                onChange={handleChange}
-                required
-              >
-                <option>Seleccione una opcion</option>
-                <option value="AGUASCALIENTES">Aguascalientes</option>
-                <option value="BAJA_CALIFORNIA">Baja California</option>
-                <option value="BAJA_CALIFORNIA_SUR">Baja California Sur</option>
-                <option value="CAMPECHE">Campeche</option>
-                <option value="CHIAPAS">Chiapas</option>
-                <option value="CHIHUAHUA">Chihuahua</option>
-                <option value="COAHUILA">Coahuila</option>
-                <option value="COLIMA">Colima</option>
-                <option value="CDMX">Cdmx</option>
-                <option value="DURANGO">Durango</option>
-                <option value="GUANAJUATO">Guanajuato</option>
-                <option value="GUERRERO">Guerrero</option>
-                <option value="HIDALGO">Hidalgo</option>
-                <option value="JALISCO">Jalisco</option>
-                <option value="MEXICO">Mexico</option>
-                <option value="MICHOACAN">Michoacan</option>
-                <option value="MORELOS">Morelos</option>
-                <option value="NAYARIT">Nayarit</option>
-                <option value="NUEVO_LEON">Nuevo Leon</option>
-                <option value="OAXACA">Oaxaca</option>
-                <option value="PUEBLA">Puebla</option>
-                <option value="QUERETARO">Queretaro</option>
-                <option value="QUINTANA_ROO">Quintana Roo</option>
-                <option value="SAN_LUIS_POTOSI">San Luis Potosi</option>
-                <option value="SINALOA">Sinaloa</option>
-                <option value="SONORA">Sonora</option>
-                <option value="TABASCO">Tabasco</option>
-                <option value="TAMAULIPAS">Tamaulipas</option>
-                <option value="TLAXCALA">Tlaxcala</option>
-                <option value="VERACRUZ">Veracruz</option>
-                <option value="YUCATAN">Yucatan</option>
-                <option value="ZACATECAS">Zacatecas</option>
-              </Form.Select>
-            </Form.Group>
-          </Row>
-          <Button variant="primary" type="submit" className="mt-3">
-            {proveedor ? "Guardar Cambios" : "Crear Proveedor"}
-          </Button>
-          <Button variant="danger mx-3 mt-3" onClick={onHide}>
-            Cancelar
-          </Button>
+          {/* Información General */}
+          <Card className="mb-4 shadow-sm">
+            <Card.Header>Información General</Card.Header>
+            <Card.Body>
+              <Row className="mb-3">
+                <Form.Group
+                  as={Col}
+                  sm={4}
+                  controlId="tipoPersona"
+                  className="mt-3"
+                >
+                  <Form.Label>Tipo Persona</Form.Label>
+                  <Form.Select
+                    name="tipoPersona"
+                    value={formData.tipoPersona}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option>Seleccione una opción</option>
+                    <option value="PERSONA_FISICA">Persona Física</option>
+                    <option value="PERSONA_MORAL">Persona Moral</option>
+                  </Form.Select>
+                </Form.Group>
+                <Form.Group as={Col} sm={8} controlId="nombre" className="mt-3">
+                  <Form.Label>
+                    <FaUser /> Nombre/Razón Social
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="nombre"
+                    value={formData.nombre}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+              </Row>
+              <Row className="mb-3">
+                <Form.Group as={Col} sm={3} controlId="rfc" className="mt-3">
+                  <Form.Label>RFC</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="rfc"
+                    value={formData.rfc}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group as={Col} controlId="regimenFiscal" className="mt-3">
+                  <Form.Label>Régimen Fiscal</Form.Label>
+                  <Form.Select
+                    name="regimenFiscal"
+                    value={formData.regimenFiscal}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option>Seleccione una opción</option>
+                    <option value="REGIMEN_SIMPLIFICADO_DE_CONFIANZA">
+                      Régimen Simplificado De Confianza
+                    </option>
+                    <option value="GENERAL_LEY_PERSONAS_MORALES">
+                      General Ley Personas Morales
+                    </option>
+                  </Form.Select>
+                </Form.Group>
+              </Row>
+            </Card.Body>
+          </Card>
+
+          {/* Información de Contacto */}
+          <Card className="mb-4 shadow-sm">
+            <Card.Header>Información de Contacto</Card.Header>
+            <Card.Body>
+              <Row className="mb-3">
+                <Form.Group as={Col} controlId="email" className="mt-3">
+                  <Form.Label>
+                    <FaEnvelope /> Email
+                  </Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group as={Col} controlId="telefono" className="mt-3">
+                  <Form.Label>
+                    <FaPhone /> Teléfono
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="telefono"
+                    value={formData.telefono}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+              </Row>
+              <Row className="mb-3">
+                <Form.Group as={Col} controlId="emailAlterno" className="mt-3">
+                  <Form.Label>Email Alterno</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="emailAlterno"
+                    value={formData.emailAlterno}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  controlId="telefonoAlterno"
+                  className="mt-3"
+                >
+                  <Form.Label>Teléfono Alterno</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="telefonoAlterno"
+                    value={formData.telefonoAlterno}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Row>
+            </Card.Body>
+          </Card>
+
+          {/* Dirección */}
+          <Card className="mb-4 shadow-sm">
+            <Card.Header>Dirección</Card.Header>
+            <Card.Body>
+              <Row className="mb-3">
+                <Form.Group
+                  as={Col}
+                  sm={8}
+                  controlId="direccion"
+                  className="mt-3"
+                >
+                  <Form.Label>Dirección</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="direccion"
+                    value={formData.direccion}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group as={Col} controlId="colonia" className="mt-3">
+                  <Form.Label>Colonia</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="colonia"
+                    value={formData.colonia}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+              </Row>
+              <Row>
+                <Form.Group as={Col} sm={4} controlId="ciudad" className="mt-3">
+                  <Form.Label>Ciudad</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="ciudad"
+                    value={formData.ciudad}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  sm={3}
+                  controlId="codigoPostal"
+                  className="mt-3"
+                >
+                  <Form.Label>Código Postal</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="codigoPostal"
+                    value={formData.codigoPostal}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group as={Col} controlId="estado" className="mt-3">
+                  <Form.Label>Estado</Form.Label>
+                  <Form.Select
+                    name="estado"
+                    value={formData.estado}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option>Seleccione una opción</option>
+                    <option value="AGUASCALIENTES">Aguascalientes</option>
+                    <option value="BAJA_CALIFORNIA">Baja California</option>
+                    <option value="BAJA_CALIFORNIA_SUR">
+                      Baja California Sur
+                    </option>
+                    <option value="CAMPECHE">Campeche</option>
+                    <option value="CHIAPAS">Chiapas</option>
+                    <option value="CHIHUAHUA">Chihuahua</option>
+                    <option value="COAHUILA">Coahuila</option>
+                    <option value="COLIMA">Colima</option>
+                    <option value="CDMX">CDMX</option>
+                    <option value="DURANGO">Durango</option>
+                    <option value="GUANAJUATO">Guanajuato</option>
+                    <option value="GUERRERO">Guerrero</option>
+                    <option value="HIDALGO">Hidalgo</option>
+                    <option value="JALISCO">Jalisco</option>
+                    <option value="MEXICO">México</option>
+                    <option value="MICHOACAN">Michoacán</option>
+                    <option value="MORELOS">Morelos</option>
+                    <option value="NAYARIT">Nayarit</option>
+                    <option value="NUEVO_LEON">Nuevo León</option>
+                    <option value="OAXACA">Oaxaca</option>
+                    <option value="PUEBLA">Puebla</option>
+                    <option value="QUERETARO">Querétaro</option>
+                    <option value="QUINTANA_ROO">Quintana Roo</option>
+                    <option value="SAN_LUIS_POTOSI">San Luis Potosí</option>
+                    <option value="SINALOA">Sinaloa</option>
+                    <option value="SONORA">Sonora</option>
+                    <option value="TABASCO">Tabasco</option>
+                    <option value="TAMAULIPAS">Tamaulipas</option>
+                    <option value="TLAXCALA">Tlaxcala</option>
+                    <option value="VERACRUZ">Veracruz</option>
+                    <option value="YUCATAN">Yucatán</option>
+                    <option value="ZACATECAS">Zacatecas</option>
+                  </Form.Select>
+                </Form.Group>
+              </Row>
+            </Card.Body>
+          </Card>
+
+          <div className="d-flex justify-content-end">
+            <Button variant="primary" type="submit" className="mt-3">
+              {proveedor ? "Guardar Cambios" : "Crear Proveedor"}
+            </Button>
+            <Button variant="secondary" className="mx-3 mt-3" onClick={onHide}>
+              Cancelar
+            </Button>
+          </div>
         </Form>
       </Modal.Body>
     </Modal>
