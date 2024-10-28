@@ -1,114 +1,215 @@
 import React from "react";
-import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import { Modal, Button, Form, Row, Col, Card, Badge } from "react-bootstrap";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 const CotizacionDetailsModal = ({ show, onHide, cotizacion }) => {
   if (!cotizacion) return null;
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("es-MX", {
+      style: "currency",
+      currency: "MXN",
+    }).format(amount);
+  };
+
   return (
-    <Modal show={show} onHide={onHide} size="xl">
-      <Modal.Header closeButton>
-        <Modal.Title>Detalles de la Cotización</Modal.Title>
+    <Modal show={show} onHide={onHide} size="xl" className="cotizacion-modal">
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title>
+          <i className="fas fa-file-invoice me-2"></i>
+          Detalles de la Cotización
+        </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <Form>
-          <Row className="mb-3">
-            <Form.Group as={Col} controlId="fechaCreacion">
-              <Form.Label>Fecha de Creación</Form.Label>
-              <Form.Control
-                type="text"
-                value={cotizacion.fechaCreacion}
-                readOnly
-              />
-            </Form.Group>
-            <Form.Group as={Col} controlId="fechaActualizacion">
-              <Form.Label>Fecha de Actualización</Form.Label>
-              <Form.Control
-                type="text"
-                value={cotizacion.fechaActualizacion}
-                readOnly
-              />
-            </Form.Group>
-          </Row>
-          <Row className="mb-3">
-            <Form.Group as={Col} controlId="cliente">
-              <Form.Label>Cliente</Form.Label>
-              <Form.Control
-                type="text"
-                value={cotizacion.cliente.nombre}
-                readOnly
-              />
-            </Form.Group>
-            <Form.Group as={Col} controlId="rfc">
-              <Form.Label>RFC</Form.Label>
-              <Form.Control
-                type="text"
-                value={cotizacion.cliente.rfc}
-                readOnly
-              />
-            </Form.Group>
-          </Row>
-          <h5>Productos</h5>
-          {cotizacion.productos.map((producto, index) => (
-            <Row className="mb-3" key={index}>
-              <Form.Group as={Col} controlId={`producto-${index}`}>
-                <Form.Label>Producto</Form.Label>
-                <Form.Control type="text" value={producto.nombre} readOnly />
-              </Form.Group>
-              <Form.Group as={Col} controlId={`cantidad-${index}`}>
-                <Form.Label>Cantidad</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={producto.cantidad}
-                  readOnly
-                />
-              </Form.Group>
-              <Form.Group as={Col} controlId={`precio-${index}`}>
-                <Form.Label>Precio Unitario</Form.Label>
-                <Form.Control type="text" value={`$${producto.precio}`} readOnly />
-              </Form.Group>
-              <Form.Group as={Col} controlId={`descuento-${index}`}>
-                <Form.Label>Descuento (%)</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={producto.descuento}
-                  readOnly
-                />
-              </Form.Group>
-              <Form.Group as={Col} controlId={`importe-${index}`}>
-                <Form.Label>Importe</Form.Label>
-                <Form.Control type="text" value={`$${producto.importe}`} readOnly />
-              </Form.Group>
+      <Modal.Body className="bg-light">
+        <Card className="mb-4 shadow-sm">
+          <Card.Header className="bg-white">
+            <h6 className="mb-0">Información General</h6>
+          </Card.Header>
+          <Card.Body>
+            <Row className="mb-3">
+              <Col md={6}>
+                <div className="info-group">
+                  <small className="text-muted">Fecha de Creación</small>
+                  <p className="mb-0 fw-bold">
+                    {format(new Date(cotizacion.fechaCreacion), "PPP", {
+                      locale: es,
+                    })}
+                  </p>
+                </div>
+              </Col>
+              <Col md={6}>
+                <div className="info-group">
+                  <small className="text-muted">Última Actualización</small>
+                  <p className="mb-0 fw-bold">
+                    {cotizacion.fechaActualizacion
+                      ? format(new Date(cotizacion.fechaActualizacion), "PPP", {
+                          locale: es,
+                        })
+                      : "Sin actualización"}
+                  </p>
+                </div>
+              </Col>
             </Row>
-          ))}
-          <Row className="mb-3">
-            <Form.Group as={Col} controlId="subtotal">
-              <Form.Label>Subtotal</Form.Label>
-              <Form.Control
-                type="text"
-                value={`$${cotizacion.subtotal}`}
-                readOnly
-              />
-            </Form.Group>
-            <Form.Group as={Col} controlId="descuentoAdicional">
-              <Form.Label>Descuento Adicional (%)</Form.Label>
-              <Form.Control
-                type="number"
-                value={cotizacion.descuentoAdicional}
-                readOnly
-              />
-            </Form.Group>
-            <Form.Group as={Col} controlId="total">
-              <Form.Label>Total</Form.Label>
-              <Form.Control type="text" value={`$${cotizacion.total}`} readOnly />
-            </Form.Group>
-          </Row>
-        </Form>
+            <Row>
+              <Col md={6}>
+                <div className="info-group">
+                  <small className="text-muted">Cliente</small>
+                  <p className="mb-0 fw-bold">{cotizacion.cliente.nombre}</p>
+                </div>
+              </Col>
+              <Col md={6}>
+                <div className="info-group">
+                  <small className="text-muted">RFC</small>
+                  <p className="mb-0 fw-bold">{cotizacion.cliente.rfc}</p>
+                </div>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+
+        <Card className="mb-4 shadow-sm">
+          <Card.Header className="bg-white d-flex justify-content-between align-items-center">
+            <h6 className="mb-0">Productos</h6>
+            <Badge bg="primary" pill>
+              {cotizacion.productos.length} productos
+            </Badge>
+          </Card.Header>
+          <Card.Body className="p-0">
+            <div className="table-responsive">
+              <table className="table table-hover mb-0">
+                <thead className="table-light">
+                  <tr>
+                    <th>Producto</th>
+                    <th className="text-center">Cantidad</th>
+                    <th className="text-end">Precio Unit.</th>
+                    <th className="text-center">Descuento</th>
+                    <th className="text-end">Importe</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cotizacion.productos.map((producto, index) => (
+                    <tr key={index}>
+                      <td>{producto.nombre}</td>
+                      <td className="text-center">{producto.cantidad}</td>
+                      <td className="text-end">
+                        {formatCurrency(producto.precio)}
+                      </td>
+                      <td className="text-center">
+                        {producto.descuento > 0 && (
+                          <Badge bg="success">{producto.descuento}%</Badge>
+                        )}
+                      </td>
+                      <td className="text-end">
+                        {formatCurrency(producto.importe)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card.Body>
+        </Card>
+
+        <Card className="shadow-sm">
+          <Card.Header className="bg-white">
+            <h6 className="mb-0">Resumen</h6>
+          </Card.Header>
+          <Card.Body>
+            <Row className="align-items-center">
+              <Col md={8}>
+                <div className="d-flex justify-content-end">
+                  <div className="summary-items">
+                    <div className="summary-item">
+                      <small className="text-muted">Subtotal</small>
+                      <h6 className="mb-0">
+                        {formatCurrency(cotizacion.subtotal)}
+                      </h6>
+                    </div>
+                    {cotizacion.descuentoAdicional > 0 && (
+                      <>
+                        <div className="summary-item">
+                          <small className="text-muted">
+                            Descuento Adicional
+                          </small>
+                          <h6 className="mb-0 text-success">
+                            -{cotizacion.descuentoAdicional}%
+                          </h6>
+                        </div>
+                        <div className="summary-item">
+                          <small className="text-muted">
+                            Subtotal con Descuento
+                          </small>
+                          <h6 className="mb-0">
+                            {formatCurrency(cotizacion.subtotalDescuento)}
+                          </h6>
+                        </div>
+                      </>
+                    )}
+                    <div className="summary-item">
+                      <small className="text-muted">IVA</small>
+                      <h6 className="mb-0">{formatCurrency(cotizacion.iva)}</h6>
+                    </div>
+                  </div>
+                </div>
+              </Col>
+              <Col md={4} className="text-end">
+                <div className="total-amount">
+                  <small className="text-muted">Total</small>
+                  <h3 className="mb-0 text-primary">
+                    {formatCurrency(cotizacion.total)}
+                  </h3>
+                </div>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
           Cerrar
         </Button>
       </Modal.Footer>
+
+      <style jsx>{`
+        .cotizacion-modal .modal-body {
+          padding: 1.5rem;
+        }
+
+        .info-group {
+          padding: 0.5rem 0;
+        }
+
+        .summary-items {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          text-align: right;
+        }
+
+        .summary-item h6 {
+          margin-top: 0.25rem;
+        }
+
+        .total-amount {
+          padding: 1rem;
+          background: #f8f9fa;
+          border-radius: 0.5rem;
+        }
+
+        .table th {
+          font-weight: 500;
+        }
+
+        .modal-header {
+          border-bottom: 0;
+        }
+
+        .modal-footer {
+          border-top: 0;
+          background: #f8f9fa;
+        }
+      `}</style>
     </Modal>
   );
 };

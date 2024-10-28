@@ -160,7 +160,7 @@ const ClientFormModal = ({ show, onHide, client, onClientSaved }) => {
                       Regimen Simplificado De Confianza
                     </option>
                     <option value="GENERAL_LEY_PERSONAS_MORALES">
-                      Generla Ley Personas Morales
+                      General Ley Personas Morales
                     </option>
                   </Form.Select>
                 </Form.Group>

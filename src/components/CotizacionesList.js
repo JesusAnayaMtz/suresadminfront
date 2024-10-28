@@ -93,7 +93,6 @@ const CotizacionesList = () => {
     XLSX.writeFile(workbook, "cotizaciones.xlsx");
   };
 
-  // Función para exportar a PDF
   const exportCotizacionToPDF = (cotizacion) => {
     const doc = new jsPDF();
     const logo = new Image();
@@ -101,27 +100,94 @@ const CotizacionesList = () => {
 
     // Colores corporativos
     const colors = {
-      primary: [0, 48, 135], // Azul corporativo
-      secondary: [128, 128, 128], // Gris
-      accent: [0, 103, 185], // Azul acento
+      primary: [0, 48, 135],
+      secondary: [128, 128, 128],
+      accent: [0, 103, 185],
+    };
+
+    // Función para dibujar el footer
+    const drawFooter = (pageNumber) => {
+      const pageHeight = doc.internal.pageSize.height;
+      const footerStart = pageHeight - 29; // Altura desde donde comienza el footer
+
+      // Rectángulo decorativo para el pie de página
+      doc.setFillColor(245, 245, 245);
+      doc.rect(9, footerStart, 190, 25, "F");
+
+      // Datos de empresa con estilo
+      doc.setFontSize(10);
+      doc.setTextColor(...colors.primary);
+      doc.setFont("helvetica", "bold");
+      doc.text("Av. Popocatépetl 37, Fortín", 10, footerStart + 5);
+      doc.text("de las Flores, Ver. 94470", 10, footerStart + 10);
+
+      doc.setTextColor(...colors.secondary);
+      doc.setFont("helvetica", "normal");
+      doc.text("suresindustrial@gmail.com", 10, footerStart + 15);
+      doc.text("Móvil: 2711574951", 10, footerStart + 20);
+
+      // Slogan con estilo
+      doc.setFontSize(12);
+      doc.setTextColor(...colors.primary);
+      doc.setFont("helvetica", "italic");
+      doc.text(
+        "La seguridad es garantía de tu bienestar",
+        120,
+        footerStart + 5
+      );
+
+      // Línea decorativa final
+      doc.setDrawColor(...colors.primary);
+      doc.setLineWidth(0.5);
+      doc.line(10, footerStart + 23, 200, footerStart + 23);
+
+      // Número de página
+      doc.setFontSize(8);
+      doc.text(`Página ${pageNumber}`, 185, footerStart + 22);
     };
 
     logo.onload = function () {
-      // Fondo decorativo header
-      doc.setFillColor(240, 240, 240);
-      doc.rect(0, 0, 220, 45, "F");
+      let pageNumber = 0;
 
-      // Línea decorativa
-      doc.setDrawColor(...colors.primary);
-      doc.setLineWidth(1);
-      doc.line(0, 45, 210, 45);
+      // Función para dibujar el header
+      const drawHeader = () => {
+        // Fondo decorativo header
+        doc.setFillColor(240, 240, 240);
+        doc.rect(0, 0, 220, 45, "F");
 
-      // Logo y header
-      doc.addImage(logo, "PNG", 160, 5, 45, 15);
+        // Línea decorativa
+        doc.setDrawColor(...colors.primary);
+        doc.setLineWidth(1);
+        doc.line(0, 45, 210, 45);
 
-      // Rectángulo decorativo para el pie de pagina
-      doc.setFillColor(245, 245, 245);
-      doc.rect(10, 267, 190, 25, "F");
+        // Logo y header
+        doc.addImage(logo, "PNG", 160, 5, 45, 15);
+
+        // Título Cotización con diseño
+        doc.setFillColor(...colors.primary);
+        doc.rect(75, 4, 50, 8, "F");
+        doc.setFontSize(14);
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.text("COTIZACIÓN", 85, 10);
+
+        // Datos de la cotización
+        doc.setFontSize(11);
+        doc.setTextColor(60, 60, 60);
+        doc.setFont("helvetica", "normal");
+        doc.text(`No.: ${cotizacion.id}`, 15, 20);
+        doc.text(`Fecha: ${cotizacion.fechaCreacion}`, 15, 25);
+        doc.text(`Cliente: ${cotizacion.cliente.nombre}`, 15, 30);
+        doc.text(`Rfc: ${cotizacion.cliente.rfc}`, 15, 35);
+        doc.text(
+          `Agente: ${cotizacion.agente || "Ing. Roxana Luna Ramirez"}`,
+          15,
+          40
+        );
+      };
+
+      // Dibujar header inicial
+      drawHeader();
 
       // Texto introductorio
       doc.setFontSize(10);
@@ -136,37 +202,14 @@ const CotizacionesList = () => {
 
       doc.text(introText, 15, 50, { maxWidth: 180, align: "justify" });
 
-      // Título Cotización con diseño
-      doc.setFillColor(...colors.primary);
-      doc.rect(75, 4, 50, 8, "F");
-      doc.setFontSize(14);
-      doc.setTextColor(255, 255, 255);
-      doc.setFont("helvetica", "bold");
-      doc.text("COTIZACIÓN", 85, 10);
-
-      // Datos de la cotización en un cuadro
-      doc.setFillColor(245, 245, 245);
-
-      doc.setFontSize(11);
-      doc.setTextColor(60, 60, 60);
-      doc.setFont("helvetica", "normal");
-      doc.text(`No.: ${cotizacion.id}`, 10, 20);
-      doc.text(`Fecha: ${cotizacion.fechaCreacion}`, 10, 25);
-      doc.text(`Cliente: ${cotizacion.cliente.nombre}`, 10, 30);
-      doc.text(`Rfc: ${cotizacion.cliente.rfc}`, 10, 35);
-      doc.text(
-        `Agente: ${cotizacion.agente || "Ing. Roxana Luna Ramirez"}`,
-        10,
-        40
-      );
-
-      // Tabla de productos con estilo mejorado
+      // Tabla de productos con manejo de múltiples páginas
       const tableColumns = [
         "Part.",
         "Descripción",
         "Unidad",
         "Cantidad",
         "P.U.",
+        "Descuento",
         "Total",
       ];
 
@@ -176,9 +219,11 @@ const CotizacionesList = () => {
         `${prod.unidadVenta.replace(/_/g, " ").toLowerCase()}`,
         prod.cantidad,
         `$${Number(prod.precio).toFixed(2)}`,
-        `$${(prod.cantidad * prod.precio).toFixed(2)}`,
+        `${prod.descuento}%`,
+        `$${prod.importe.toFixed(2)}`,
       ]);
 
+      // Configuración de la tabla con manejo de páginas
       doc.autoTable({
         startY: 70,
         head: [tableColumns],
@@ -203,30 +248,62 @@ const CotizacionesList = () => {
           3: { cellWidth: 25 },
           4: { cellWidth: 25 },
           5: { cellWidth: 25 },
-          6: { cellWidth: 20 },
+          6: { cellWidth: 25 },
+        },
+        margin: { top: 70, bottom: 80 }, // Margen para el header y footer
+        didDrawPage: function (data) {
+          // Dibujar header en cada nueva página
+          drawHeader();
+          // Dibujar footer en cada página
+          drawFooter(pageNumber);
+          pageNumber++;
         },
       });
 
-      // Totales con diseño mejorado
+      // Totales después de la tabla
       const finalY = doc.lastAutoTable.finalY + 5;
+      const spaceNeeded = 100; // Espacio aproximado necesario para totales y notas
+      const pageHeight = doc.internal.pageSize.height;
+      const footerHeight = 70;
+
+      // Verificar si hay espacio suficiente en la página actual
+      if (finalY + spaceNeeded > pageHeight - footerHeight) {
+        doc.addPage();
+        pageNumber++;
+        drawHeader();
+        drawFooter(pageNumber);
+      }
+
+      // Totales con diseño mejorado
       doc.setFillColor(245, 245, 245);
-      doc.rect(145, finalY, 52, 20, "F");
+      const totalesY = doc.lastAutoTable.finalY + 5;
+      doc.rect(132, totalesY, 65, 32, "F");
       doc.setFontSize(10);
       doc.setTextColor(...colors.primary);
       doc.setFont("helvetica", "bold");
-      doc.text("SubTotal:", 150, finalY + 5);
-      doc.text("IVA:", 150, finalY + 11);
-      doc.text("Total:", 150, finalY + 17);
 
-      // Valores de totales
-      doc.setTextColor(60, 60, 60);
-      doc.setFont("helvetica", "normal");
-      doc.text(`$${Number(cotizacion.subtotal).toFixed(2)}`, 175, finalY + 5);
-      doc.text(`$${(cotizacion.subtotal * 0.16).toFixed(2)}`, 175, finalY + 11);
-      doc.text(`$${(cotizacion.total).toFixed(2)}`, 175, finalY + 17);
+      // Agregar totales
+      const totales = [
+        ["SubTotal:", `$${Number(cotizacion.subtotal).toFixed(2)}`],
+        ["Descu. Adicional", `$${cotizacion.descuentoAdicional}`],
+        ["SubTotal C/Descuento", `$${cotizacion.subtotalDescuento}`],
+        ["IVA:", `$${cotizacion.iva.toFixed(2)}`],
+        ["Total:", `$${cotizacion.total.toFixed(2)}`],
+      ];
 
-      // Sección de notas con diseño
-      const notasY = finalY + 30;
+      let currentY = totalesY + 5;
+      totales.forEach(([label, value]) => {
+        doc.setTextColor(...colors.primary);
+        doc.setFont("helvetica", "bold");
+        doc.text(label, 135, currentY);
+        doc.setTextColor(60, 60, 60);
+        doc.setFont("helvetica", "normal");
+        doc.text(value, 175, currentY);
+        currentY += 6;
+      });
+
+      // Sección de notas
+      const notasY = currentY + 10;
       doc.setFillColor(...colors.primary);
       doc.rect(10, notasY, 190, 6, "F");
       doc.setTextColor(255, 255, 255);
@@ -234,9 +311,6 @@ const CotizacionesList = () => {
       doc.text("Notas:", 15, notasY + 4);
 
       // Contenido de notas
-      doc.setTextColor(60, 60, 60);
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
       const notas = [
         "A. Cambio de precios sin previo aviso.",
         "B. Condiciones de pago: a convenir con el departamento de compras.",
@@ -246,13 +320,16 @@ const CotizacionesList = () => {
         "F. Cuenta bancaria a nombre de Sures Ingeniería Asesoría Gestoría y Capacitación, S.A. de C.V.",
       ];
 
+      doc.setTextColor(60, 60, 60);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
       let yPos = notasY + 10;
       notas.forEach((nota) => {
         doc.text(nota, 15, yPos);
         yPos += 6;
       });
 
-      // Información bancaria con diseño
+      // Información bancaria
       doc.setFillColor(245, 245, 245);
       doc.rect(10, yPos, 190, 25, "F");
       yPos += 6;
@@ -279,19 +356,7 @@ const CotizacionesList = () => {
         yPos + 5
       );
 
-      // Datos de empresa con estilo
-      doc.setFontSize(10);
-      doc.setTextColor(...colors.primary);
-      doc.setFont("helvetica", "bold");
-      doc.text("Av. Popocatépetl 37, Fortín", 10, yPos + 50);
-      doc.text("de las Flores, Ver. 94470", 10, yPos + 55);
-
-      doc.setTextColor(...colors.secondary);
-      doc.setFont("helvetica", "normal");
-      doc.text("suresindustrial@gmail.com", 10, yPos + 60);
-      doc.text("Móvil: 2711574951", 10, yPos + 65);
-
-      // Firma con línea decorativa
+      // Firma
       yPos += 15;
       doc.setDrawColor(...colors.primary);
       doc.setFont("helvetica", "bold");
@@ -299,22 +364,8 @@ const CotizacionesList = () => {
       doc.setFont("helvetica", "normal");
       doc.text(cotizacion.agente || "Roxana Luna Ramirez", 90, yPos + 5);
 
-      /* // Pie de página
-      doc.setFontSize(8);
-      doc.setTextColor(...colors.secondary);
-      doc.text("C.c.p. Archivo Sures", 10, yPos + 5);
-      doc.text("RLR/UTF", 10, yPos + 5); */
-
-      // Slogan con estilo
-      doc.setFontSize(12);
-      doc.setTextColor(...colors.primary);
-      doc.setFont("helvetica", "italic");
-      doc.text("La seguridad es garantía de tu bienestar", 120, yPos + 50);
-
-      // Línea decorativa final
-      doc.setDrawColor(...colors.primary);
-      doc.setLineWidth(0.5);
-      doc.line(10, yPos + 55, 200, yPos + 55);
+      // Dibujar el footer en la última página
+      drawFooter(pageNumber);
 
       // Guardar PDF
       doc.save(`cotizacion_${cotizacion.cliente.nombre}_${cotizacion.id}.pdf`);

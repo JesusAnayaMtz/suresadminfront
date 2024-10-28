@@ -122,12 +122,12 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
       const precioConDescuento = precioProducto * (1 - descuento / 100);
       subtotal += precioConDescuento * cantidad;
     });
-    const total = subtotal - subtotal * (descuentoAdicional / 100);
-    return { subtotal, total };
+    const subtotalDescuento = subtotal - subtotal * (descuentoAdicional / 100);
+    return { subtotal, subtotalDescuento };
   };
 
   const handleSave = async () => {
-    const { subtotal, total } = calcularTotales();
+    const { subtotal, subtotalDescuento } = calcularTotales();
 
     const payload = {
       cliente: {
@@ -140,7 +140,7 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
       })),
       descuentoAdicional: parseFloat(descuentoAdicional),
       subtotal,
-      total,
+      subtotalDescuento,
     };
 
     try {
@@ -175,7 +175,7 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} size="lg">
+    <Modal show={show} onHide={onHide} size="xl">
       <Modal.Header closeButton>
         <Modal.Title>
           {initialData ? "Editar Cotización" : "Crear Cotización"}
@@ -203,7 +203,7 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
           <h5>Productos</h5>
           {selectedProductos.map((producto, index) => (
             <Row key={index} className="mb-3 border p-2 rounded">
-              <Form.Group as={Col} controlId={`producto-${index}`}>
+              <Form.Group as={Col} sm={6} controlId={`producto-${index}`}>
                 <Form.Label>Producto</Form.Label>
                 <Select
                   options={productos}
@@ -219,7 +219,7 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
                   isClearable
                 />
               </Form.Group>
-              <Form.Group as={Col} controlId={`cantidad-${index}`}>
+              <Form.Group as={Col} sm={2} controlId={`cantidad-${index}`}>
                 <Form.Label>Cantidad</Form.Label>
                 <Form.Control
                   type="number"
@@ -231,7 +231,7 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
                   required
                 />
               </Form.Group>
-              <Form.Group as={Col} controlId={`descuento-${index}`}>
+              <Form.Group as={Col} sm={2} controlId={`descuento-${index}`}>
                 <Form.Label>Descuento (%)</Form.Label>
                 <Form.Control
                   type="number"
@@ -241,7 +241,7 @@ const CotizacionFormModal = ({ show, onHide, onSave, initialData }) => {
                   }
                 />
               </Form.Group>
-              <Col sm={2} className="d-flex align-items-center">
+              <Col sm={2} className="d-flex align-items-center mt-4">
                 <Button
                   variant="danger"
                   onClick={() => handleRemoveProducto(index)}
