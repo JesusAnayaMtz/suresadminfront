@@ -6,7 +6,7 @@ import {
 import CotizacionDetailsModal from "./CotizacionDetailsModal";
 import CotizacionFormModal from "./CotizacionFormModal";
 import SearchBar from "./SearchBar";
-import { Button, Placeholder, Table } from "react-bootstrap";
+import { Button, Form, Pagination, Placeholder, Table } from "react-bootstrap";
 import * as XLSX from "xlsx";
 import { BsEye, BsPencil, BsTrash, BsFileEarmarkPdf } from "react-icons/bs";
 import Swal from "sweetalert2";
@@ -20,6 +20,11 @@ const CotizacionesList = () => {
   const [showFormModal, setShowFormModal] = useState(false);
   const [editingCotizacion, setEditingCotizacion] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Estados para la paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const pageSizeOptions = [10, 15, 20, 25, 30];
 
   useEffect(() => {
     fetchCotizaciones();
@@ -84,6 +89,27 @@ const CotizacionesList = () => {
         .includes(searchTerm.toLowerCase()) ||
       cotizacion.fechaCreacion.includes(searchTerm)
   );
+
+  // Calcular páginas totales
+  const totalPages = Math.ceil(filteredCotizaciones.length / itemsPerPage);
+
+  // Obtener productos de la página actual
+  const getCurrentPageCotizaciones = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredCotizaciones.slice(startIndex, endIndex);
+  };
+
+  // Manejadores de paginación
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleItemsPerPageChange = (event) => {
+    const newItemsPerPage = parseInt(event.target.value);
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1); // Resetear a la primera página cuando se cambia el número de items por página
+  };
 
   // Función para exportar a Excel
   const exportToExcel = () => {
@@ -372,6 +398,84 @@ const CotizacionesList = () => {
     };
   };
 
+  // Componente de paginación
+  const renderPagination = () => {
+    return (
+      <div className="d-flex justify-content-between align-items-center mt-3">
+        <div className="d-flex align-items-center">
+          <span className="me-2">Mostrar</span>
+          <Form.Select
+            size="md"
+            style={{ width: "auto" }}
+            value={itemsPerPage}
+            onChange={handleItemsPerPageChange}
+          >
+            {pageSizeOptions.map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </Form.Select>
+          <span className="ms-2">registros</span>
+        </div>
+        <Pagination size="md">
+          <Pagination.First
+            onClick={() => handlePageChange(1)}
+            disabled={currentPage === 1}
+          />
+          <Pagination.Prev
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          />
+
+          {/* Mostrar páginas */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter((pageNum) => {
+              // Mostrar siempre primera y última página, y 3 páginas alrededor de la página actual
+              return (
+                pageNum === 1 ||
+                pageNum === totalPages ||
+                (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+              );
+            })
+            .map((pageNum, index, array) => {
+              // Agregar elipsis si hay saltos en la numeración
+              if (index > 0 && pageNum - array[index - 1] > 1) {
+                return [
+                  <Pagination.Ellipsis key={`ellipsis-${pageNum}`} disabled />,
+                  <Pagination.Item
+                    key={pageNum}
+                    active={pageNum === currentPage}
+                    onClick={() => handlePageChange(pageNum)}
+                  >
+                    {pageNum}
+                  </Pagination.Item>,
+                ];
+              }
+              return (
+                <Pagination.Item
+                  key={pageNum}
+                  active={pageNum === currentPage}
+                  onClick={() => handlePageChange(pageNum)}
+                >
+                  {pageNum}
+                </Pagination.Item>
+              );
+            })}
+
+          <Pagination.Next
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          />
+          <Pagination.Last
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage === totalPages}
+          />
+        </Pagination>
+      </div>
+    );
+  };
+
   return (
     <div>
       <h2 className="text-center">Listado de Cotizaciones</h2>
@@ -381,10 +485,7 @@ const CotizacionesList = () => {
             <p className="mt-2 text-center fs-5">Buscar</p>
           </div>
           <div className="col-md-7">
-            <SearchBar
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-            />
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </div>
           <div className="col-md-4 text-end">
             <Button
@@ -419,7 +520,7 @@ const CotizacionesList = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredCotizaciones.map((cotizacion) => (
+            {getCurrentPageCotizaciones().map((cotizacion) => (
               <tr key={cotizacion.id}>
                 <td>{cotizacion.cliente.nombre}</td>
                 <td>{cotizacion.fechaCreacion}</td>
@@ -463,6 +564,7 @@ const CotizacionesList = () => {
             ))}
           </tbody>
         </Table>
+        {renderPagination()}
       </div>
       {showDetailsModal && (
         <CotizacionDetailsModal
